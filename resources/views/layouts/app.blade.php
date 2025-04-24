@@ -23,6 +23,9 @@
             body {
                 font-family: 'Poppins', sans-serif;
             }
+            .navbar-collapse.collapse {
+                transition: none !important;
+            }
         </style>
         @yield('styles')
         
@@ -31,9 +34,6 @@
     </head>
     <body>
         <div class="wrapper">
-            <!-- Include Header -->
-            @include('partials._header')
-            
             <!-- Page Content -->
             <main>
                 @yield('content')

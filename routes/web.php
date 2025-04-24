@@ -9,13 +9,13 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 
-// Show welcome page at root URL
+// Home/welcome page
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
-// Use /home for your main home page with categories and products
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Dashboard and other pages
+Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -31,6 +31,19 @@ Route::middleware('auth')->group(function () {
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
+
+// Static pages
+Route::get('/promotions', function () {
+    return view('promotions');
+})->name('promotions');
+
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
 
 // Cart routes
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

@@ -51,7 +51,7 @@
     }
 </style>
 @endsection
-
+@include('partials.header')
 @section('content')
 <!-- Hero Section -->
 <section class="hero-section">
