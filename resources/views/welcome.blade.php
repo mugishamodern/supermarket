@@ -10,55 +10,6 @@
         overflow-x: hidden;
     }
     
-    .welcome-hero {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/supermarket-entrance.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-align: center;
-    }
-    
-    .logo-container {
-        margin-bottom: 30px;
-    }
-    
-    .logo {
-        max-width: 200px;
-        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
-    }
-    
-    .welcome-title {
-        font-size: 3.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-    }
-    
-    .welcome-subtitle {
-        font-size: 1.5rem;
-        margin-bottom: 40px;
-        text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-    }
-    
-    .enter-btn {
-        font-size: 1.2rem;
-        padding: 12px 40px;
-        text-transform: uppercase;
-        font-weight: 600;
-        letter-spacing: 1px;
-        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .enter-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(220, 53, 69, 0.6);
-    }
-    
     .features-section {
         padding: 60px 0;
         background-color: white;
@@ -78,16 +29,6 @@
         font-size: 2.5rem;
         color: #dc3545;
         margin-bottom: 20px;
-    }
-    
-    .animation-float {
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-        100% { transform: translateY(0px); }
     }
     
     .brands-section {
@@ -118,45 +59,12 @@
         overflow: hidden;
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
-    
-    .footer {
-        background-color: #212529;
-        color: rgba(255,255,255,0.7);
-        padding: 30px 0;
-        font-size: 0.9rem;
-    }
-    
-    .social-links a {
-        color: white;
-        margin: 0 10px;
-        font-size: 1.2rem;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .welcome-title {
-            font-size: 2.5rem;
-        }
-        
-        .welcome-subtitle {
-            font-size: 1.2rem;
-        }
-    }
 </style>
 @endsection
 
 @section('content')
 <!-- Hero Section -->
-<section class="welcome-hero">
-    <div class="container">
-        <div class="logo-container animation-float">
-            <img src="\uploads\images\mukora-logo.png" alt="Mukora Supermarket Logo" class="logo">
-        </div>
-        <h1 class="welcome-title">Welcome to Mukora Supermarket</h1>
-        <p class="welcome-subtitle">Kasese's premier shopping destination for quality goods and exceptional service</p>
-        <a href="{{ route('home') }}" class="btn btn-danger btn-lg enter-btn">Enter Store</a>
-    </div>
-</section>
+@include('partials._hero')
 
 <!-- Features Section -->
 <section class="features-section">
@@ -248,7 +156,6 @@
             </div>
             <div class="col-lg-6">
                 <div class="map-container">
-                    <!-- Replace with your actual Google Maps embed code -->
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63799.41743292506!2d29.99106!3d0.18333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x175e5996cece6d2b%3A0x4b2b58af6cf2271f!2sKasese%2C%20Uganda!5e0!3m2!1sen!2sus!4v1682531234567!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
@@ -257,23 +164,7 @@
 </section>
 
 <!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 text-center text-md-start">
-                <p>&copy; {{ date('Y') }} Mukora Supermarket. All rights reserved.</p>
-            </div>
-            <div class="col-md-6 text-center text-md-end">
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+@include('partials._footer')
 @endsection
 
 @section('scripts')
