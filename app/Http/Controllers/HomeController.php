@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Address;
+use App\Models\User;
+use App\Models\Feedback;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -16,18 +18,24 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        // Get all categories
-        $categories = Category::all();
-        
-        // Get featured products
-        $featuredProducts = Product::where('is_featured', true)
-            ->orderBy('created_at', 'desc')
-            ->take(8)
-            ->get();
-        
-        return view('home', compact('categories', 'featuredProducts'));
-    }
+{
+    // Get all categories
+    $categories = Category::all();
+    
+    // Get 2 random categories for the featured section
+    $featuredCategories = Category::inRandomOrder()->take(2)->get();
+    
+    // Get featured products
+    $featuredProducts = Product::where('is_featured', true)
+        ->orderBy('created_at', 'desc')
+        ->take(8)
+        ->get();
+
+    // Fetch all feedbacks from the database
+    $feedbacks = Feedback::all();
+    
+    return view('home', compact('categories', 'featuredCategories', 'featuredProducts', 'feedbacks'));
+}
     
     /**
      * Show the user profile page.
@@ -39,7 +47,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $addresses = $user->addresses;
         
-        return view('profile', compact('user', 'addresses'));
+        return view('profile.user', compact('user', 'addresses'));
     }
     
     /**

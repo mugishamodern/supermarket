@@ -11,7 +11,7 @@
                     <div class="row">
                         <!-- Product Image -->
                         <div class="col-lg-6 mb-4">
-                            <img src="{{ $product->image ?? '/images/product-placeholder.jpg' }}" 
+                        <img src="{{ $product->image ? asset('storage/'.$product->image) : asset('images/product-placeholder.jpg') }}" 
                                  alt="{{ $product->name }}" 
                                  class="img-fluid rounded" 
                                  style="max-height: 500px; object-fit: cover;">

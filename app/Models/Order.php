@@ -52,7 +52,12 @@ class Order extends Model
     /**
      * Get the items for the order.
      */
-    public function items()
+    public function Items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function OrderItems()
     {
         return $this->hasMany(OrderItem::class);
     }

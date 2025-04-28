@@ -164,7 +164,7 @@
                 <a href="{{ route('categories.show', $category->slug) }}" class="block">
                     <div class="category-card bg-white rounded-xl overflow-hidden shadow-md">
                         <div class="relative overflow-hidden">
-                            <img src="{{ $category->image ?? '/images/category-placeholder.jpg' }}" alt="{{ $category->name }}" 
+                        <img src="{{ $category->image ? asset('storage/'.$category->image) : asset('images/category-placeholder.jpg') }}" 
                                 class="w-full h-48 object-cover transform hover:scale-110 transition duration-500">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                                 <h5 class="text-white font-semibold p-4 text-lg">{{ $category->name }}</h5>
@@ -184,51 +184,71 @@
 </section>
 
 <!-- Featured Products Section with Carousel -->
-<section class="py-16" id="featured">
+<section class="py-24 bg-gradient-to-b from-white to-gray-50" id="featured">
     <div class="container mx-auto px-4">
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h2 class="text-3xl font-bold">Featured Products</h2>
-                <p class="text-gray-600 mt-2">Handpicked quality products just for you</p>
-            </div>
-            <a href="{{ route('products.index') }}" class="hidden md:flex items-center px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition">
-                View All
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </a>
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <span class="inline-block px-4 py-1.5 bg-red-100 text-red-600 font-medium text-sm rounded-full mb-3">Top Selection</span>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Featured Products</h2>
+            <p class="text-gray-600 max-w-xl mx-auto">Handpicked quality products selected just for you, updated regularly with our best offerings</p>
+            <div class="w-24 h-1 bg-red-600 mx-auto mt-6"></div>
         </div>
         
-        <div class="product-slider">
+        <!-- Products Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             @foreach($featuredProducts as $product)
-            <div class="px-2">
-                <div class="product-card bg-white rounded-xl shadow-md overflow-hidden h-full">
-                    <div class="relative">
-                        <img src="{{ $product->image ?? '/images/product-placeholder.jpg' }}" alt="{{ $product->name }}" 
-                            class="w-full h-56 object-cover">
-                        <div class="absolute top-0 right-0 p-2">
-                            <span class="badge bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">Featured</span>
+            <div class="px-3">
+                <div class="product-card group bg-white rounded-3xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl">
+                    <!-- Product Image Container - Square Aspect Ratio -->
+                    <div class="relative aspect-square overflow-hidden">
+                        <!-- Product Image -->
+                        <img src="{{ $product->image ? asset('storage/'.$product->image) : asset('images/product-placeholder.jpg') }}" 
+                            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        
+                        <!-- Featured Badge -->
+                        <div class="absolute top-4 left-4">
+                            <span class="badge bg-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">Featured</span>
                         </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                            <button class="quick-view-btn bg-white text-gray-800 rounded-full p-3 mx-2 transform hover:scale-110 transition" 
+                        
+                        <!-- Quick Action Buttons -->
+                        <div class="absolute right-4 top-4 flex flex-col space-y-2 transform translate-x-12 group-hover:translate-x-0 transition-transform duration-300">
+                            <button class="quick-view-btn bg-white text-gray-800 rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-red-600 hover:text-white transition-colors" 
                                 data-product-id="{{ $product->id }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
                             </button>
-                            <button class="add-to-wishlist bg-white text-gray-800 rounded-full p-3 mx-2 transform hover:scale-110 transition" 
+                            <button class="add-to-wishlist bg-white text-gray-800 rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-red-600 hover:text-white transition-colors" 
                                 data-product-id="{{ $product->id }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>
                             </button>
                         </div>
+                        
+                        <!-- Add to Cart Button Overlay -->
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white w-full py-2.5 rounded-xl text-sm font-medium transition flex items-center justify-center" 
+                                data-product-id="{{ $product->id }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                Add to Cart
+                            </button>
+                        </div>
                     </div>
-                    <div class="p-4">
-                        <h5 class="font-semibold text-lg mb-1">{{ $product->name }}</h5>
-                        <p class="text-gray-600 text-sm mb-3">{{ Str::limit($product->description, 50) }}</p>
-                        <div class="flex text-yellow-400 mb-2">
+                    
+                    <!-- Product Info -->
+                    <div class="p-5">
+                        <!-- Product Name -->
+                        <h5 class="font-bold text-lg mb-1 text-gray-800 line-clamp-1">{{ $product->name }}</h5>
+                        
+                        <!-- Product Description -->
+                        <p class="text-gray-600 text-xs mb-3 line-clamp-2">{{ Str::limit($product->description, 60) }}</p>
+                        
+                        <!-- Ratings -->
+                        <div class="flex text-yellow-400 mb-3">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                             </svg>
@@ -245,14 +265,15 @@
                                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                             </svg>
                         </div>
+                        
+                        <!-- Price -->
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-red-600 text-lg">UGX {{ number_format($product->price) }}</span>
-                            <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition transform hover:scale-105" 
+                            <span class="font-bold text-red-600 text-xl">UGX {{ number_format($product->price) }}</span>
+                            <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-md transition transform hover:scale-105" 
                                 data-product-id="{{ $product->id }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
-                                Add
                             </button>
                         </div>
                     </div>
@@ -261,9 +282,13 @@
             @endforeach
         </div>
         
-        <div class="mt-8 text-center md:hidden">
-            <a href="{{ route('products.index') }}" class="inline-block px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+        <!-- View All Button -->
+        <div class="mt-16 text-center">
+            <a href="{{ route('products.index') }}" class="inline-flex items-center px-8 py-4 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition shadow-lg group">
                 View All Products
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
             </a>
         </div>
     </div>
@@ -273,33 +298,20 @@
 <section class="py-12">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="relative rounded-2xl overflow-hidden shadow-lg h-72 transform transition hover:scale-105" 
-                style="background: url('/images/fresh-produce.jpg') no-repeat center center; background-size: cover;">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent">
-                    <div class="flex flex-col justify-center h-full p-8 text-white">
-                        <h3 class="text-3xl font-bold mb-2">Fresh Produce</h3>
-                        <p class="mb-4 text-gray-200">Farm to table, every day of the week</p>
-                        <a href="{{ route('categories.show', 'fresh-produce') }}" 
-                            class="bg-white text-red-600 font-semibold px-6 py-2 rounded-lg hover:bg-red-600 hover:text-white transition w-max">
-                            Shop Now
-                        </a>
+            @foreach($featuredCategories as $category)
+                <div class="relative rounded-2xl overflow-hidden shadow-lg h-72 transform transition hover:scale-105" 
+                    style="background: url('{{ Storage::url($category->image) }}') no-repeat center center; background-size: cover;">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent">
+                        <div class="flex flex-col justify-center h-full p-8 text-white">
+                            <h3 class="text-3xl font-bold mb-2">{{ $category->name }}</h3>
+                            <a href="{{ route('categories.show', $category->slug) }}" 
+                                class="bg-white text-red-600 font-semibold px-6 py-2 rounded-lg hover:bg-red-600 hover:text-white transition w-max">
+                                Shop Now
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="relative rounded-2xl overflow-hidden shadow-lg h-72 transform transition hover:scale-105" 
-                style="background: url('/images/household-essentials.jpg') no-repeat center center; background-size: cover;">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent">
-                    <div class="flex flex-col justify-center h-full p-8 text-white">
-                        <h3 class="text-3xl font-bold mb-2">Household Essentials</h3>
-                        <p class="mb-4 text-gray-200">Everything you need for your home</p>
-                        <a href="{{ route('categories.show', 'household-essentials') }}" 
-                            class="bg-white text-red-600 font-semibold px-6 py-2 rounded-lg hover:bg-red-600 hover:text-white transition w-max">
-                            Shop Now
-                        </a>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -384,7 +396,6 @@
     </div>
 </section>
 
-<!-- Testimonials Section with Center-Mode Slider -->
 <section class="py-16 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="text-center mb-12">
@@ -393,95 +404,36 @@
     </div>
 
     <div class="relative">
-      <!-- Slider -->
       <div id="testimonialSlider" class="flex space-x-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-        <!-- Slide 1 -->
-        <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
-          <div class="bg-white p-6 rounded-2xl shadow-md">
-            <div class="flex items-center space-x-4 mb-4">
-              <img src="/images/customer1.jpg" alt="Jane Doe" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
-              <div>
-                <h5 class="font-semibold text-lg">Jane Doe</h5>
-                <p class="text-gray-500 text-sm">Kasese Town</p>
+        @foreach($feedbacks as $feedback)
+          <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
+            <div class="bg-white p-6 rounded-2xl shadow-md">
+              <div class="flex items-center space-x-4 mb-4">
+                <img src="{{ $feedback->image ? asset('storage/'.$feedback->image) : asset('images/feedback-placeholder.jpg') }}" alt="{{ $feedback->name }}" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
+                <div>
+                  <h5 class="font-semibold text-lg">{{ $feedback->name }}</h5>
+                  <p class="text-gray-500 text-sm">{{ $feedback->location }}</p>
+                </div>
+              </div>
+              <div class="relative mb-4">
+                <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                </svg>
+                <p class="text-gray-600 italic pl-6">{{ $feedback->message }}</p>
+              </div>
+              <div class="flex text-yellow-400">
+                @for ($i = 1; $i <= floor($feedback->rating); $i++)
+                  <i class="fas fa-star"></i>
+                @endfor
+                @if ($feedback->rating - floor($feedback->rating) >= 0.5)
+                  <i class="fas fa-star-half-alt"></i>
+                @endif
               </div>
             </div>
-            <div class="relative mb-4">
-              <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-              </svg>
-              <p class="text-gray-600 italic pl-6">I love shopping at Mukora Supermarket. Their products are always fresh, and the staff is incredibly helpful. The online ordering system is so convenient!</p>
-            </div>
-            <div class="flex text-yellow-400">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
           </div>
-        </div>
-        <!-- Slide 2 -->
-        <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
-          <div class="bg-white p-6 rounded-2xl shadow-md">
-            <div class="flex items-center space-x-4 mb-4">
-              <img src="/images/customer2.jpg" alt="John Smith" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
-              <div>
-                <h5 class="font-semibold text-lg">John Smith</h5>
-                <p class="text-gray-500 text-sm">Kisinga</p>
-              </div>
-            </div>
-            <div class="relative mb-4">
-              <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-              </svg>
-              <p class="text-gray-600 italic pl-6">The online delivery service is a game-changer! I can get everything I need without leaving my home. Fast and reliable with excellent customer service.</p>
-            </div>
-            <div class="flex text-yellow-400">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-            </div>
-          </div>
-        </div>
-        <!-- Slide 3 -->
-        <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
-          <div class="bg-white p-6 rounded-2xl shadow-md">
-            <div class="flex items-center space-x-4 mb-4">
-              <img src="/images/customer3.jpg" alt="Sarah Johnson" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
-              <div>
-                <h5 class="font-semibold text-lg">Sarah Johnson</h5>
-                <p class="text-gray-500 text-sm">Kilembe</p>
-              </div>
-            </div>
-            <div class="relative mb-4">
-              <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-              </svg>
-              <p class="text-gray-600 italic pl-6">The variety of products is impressive. I can find everything from local produce to imported goods all in one place. Best supermarket in Kasese!</p>
-            </div>
-            <div class="flex text-yellow-400">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-          </div>
-        </div>
-        <!-- Slide 4 -->
-        <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
-          <div class="bg-white p-6 rounded-2xl shadow-md">
-            <div class="flex items-center space-x-4 mb-4">
-              <img src="/images/customer4.jpg" alt="Michael Kiiza" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
-              <div>
-                <h5 class="font-semibold text-lg">Michael Kiiza</h5>
-                <p class="text-gray-500 text-sm">Bwera</p>
-              </div>
-            </div>
-            <div class="relative mb-4">
-              <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-              </svg>
-              <p class="text-gray-600 italic pl-6">Their loyalty program is excellent - I've saved so much money with the points system. The monthly promotions are always worth checking out!</p>
-            </div>
-            <div class="flex text-yellow-400">
-              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-          </div>
-        </div>
+        @endforeach
       </div>
 
-      <!-- Nav Buttons -->
       <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 focus:outline-none">
         <svg class="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -493,8 +445,15 @@
         </svg>
       </button>
     </div>
+    <!-- Contribute Feedback Button -->
+    <div class="text-center mt-12">
+      <a href="{{ route('feedback.create') }}" class="inline-block px-8 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50">
+        Contribute Feedback
+      </a>
+    </div>
   </div>
 </section>
+
 
 
 <!-- Newsletter Section with Animated Background -->

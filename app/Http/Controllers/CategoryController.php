@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
@@ -11,8 +12,25 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        // Get 2 random categories for the featured section
+        $featuredCategories = Category::inRandomOrder()->take(2)->get();
+        
+        // Keep your original ordered list for the main categories display
+        $categories = Category::orderBy('name')->get();
+        
+        return view('categories.index', compact('categories', 'featuredCategories'));
     }
+
+public function show(Category $category)
+{
+    $products = $category->products()->paginate(12);
+    $relatedCategories = Category::where('id', '!=', $category->id)
+        ->inRandomOrder()
+        ->limit(4)
+        ->get();
+    
+    return view('categories.show', compact('category', 'products', 'relatedCategories'));
+}
 
     /**
      * Show the form for creating a new resource.
@@ -33,10 +51,7 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+    
 
     /**
      * Show the form for editing the specified resource.

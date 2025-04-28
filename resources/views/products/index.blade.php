@@ -162,7 +162,7 @@
     }
 </style>
 @endsection
-
+@include('partials.header')
 @section('content')
 <!-- Hero Section -->
 <section class="hero-section">
@@ -250,7 +250,7 @@
                         <div class="col-md-4 col-6 mb-4">
                             <div class="card h-100 border-0 shadow-sm product-card">
                                 <a href="{{ route('products.show', $product->slug) }}">
-                                    <img src="{{ $product->image ?? '/images/product-placeholder.jpg' }}" 
+                                <img src="{{ $product->image ? asset('storage/'.$product->image) : asset('images/product-placeholder.jpg') }}" 
                                          alt="{{ $product->name }}" class="card-img-top">
                                 </a>
                                 <div class="card-body">

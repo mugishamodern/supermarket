@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('admin.categories.store') }}" method="POST">
+    <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         
         <div class="grid grid-cols-1 gap-6">
@@ -19,18 +19,18 @@
             </div>
             
             <div>
-                <label for="slug" class="block text-sm font-medium text-gray-700">Slug (URL)</label>
-                <input type="text" name="slug" id="slug" value="{{ old('slug') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                <p class="text-xs text-gray-500 mt-1">Leave empty to auto-generate from name</p>
-                @error('slug')
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea name="description" id="description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">{{ old('description') }}</textarea>
+                @error('description')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
             
             <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea name="description" id="description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">{{ old('description') }}</textarea>
-                @error('description')
+                <label for="image" class="block text-sm font-medium text-gray-700">Category Image</label>
+                <input type="file" name="image" id="image" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                <p class="text-xs text-gray-500 mt-1">Only JPG, PNG, JPEG, GIF files are allowed (max 2MB)</p>
+                @error('image')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>

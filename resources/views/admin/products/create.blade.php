@@ -6,6 +6,11 @@
 @endsection
 
 @section('content')
+    @if(session('success'))
+        <div class="mb-4 p-4 rounded-md bg-green-100 text-green-800">
+            {{ session('success') }}
+        </div>
+    @endif
     <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         
@@ -50,7 +55,7 @@
             
             <div>
                 <label for="stock" class="block text-sm font-medium text-gray-700">Stock Quantity</label>
-                <input type="number" name="stock" id="stock" value="{{ old('stock', 0) }}" min="0" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <input type="number" name="stock_quantity" id="stock_quantity" value="{{ old('stock_quantity', 0) }}" min="0" class="...">
                 @error('stock')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror

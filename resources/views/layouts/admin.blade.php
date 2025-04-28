@@ -16,21 +16,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-gray-100">
-    <!-- Debug area (only in debug mode) -->
-    @if(config('app.debug'))
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
-            <!-- Show any PHP errors -->
-            @php
-                $errors = error_get_last();
-                if ($errors) {
-                    echo '<p class="font-medium">Debug Error:</p>';
-                    echo '<p>' . $errors['message'] . '</p>';
-                } else {
-                    echo '<p class="font-medium">Debug Mode Active</p>';
-                }
-            @endphp
-        </div>
-    @endif
+    
 
     <div class="min-h-screen flex flex-col">
         <!-- Admin Navigation -->
@@ -49,20 +35,39 @@
                         </div>
 
                         <!-- Navigation Links -->
-                        <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <a href="{{ route('admin.products.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-500 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
-                                Products
-                            </a>
-                            <a href="{{ route('admin.categories.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                Categories
-                            </a>
-                            <a href="{{ route('admin.orders.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                Orders
-                            </a>
-                            <a href="{{ route('dashboard') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                Dashboard
-                            </a>
-                        </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <a href="{{ route('admin.dashboard') }}" 
+       class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out
+           {{ request()->routeIs('admin.dashboard') 
+               ? 'border-indigo-500 text-gray-900 focus:border-indigo-700' 
+               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
+        Dashboard
+    </a>
+    <a href="{{ route('admin.products.index') }}" 
+       class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out
+           {{ request()->routeIs('admin.products.index') 
+               ? 'border-indigo-500 text-gray-900 focus:border-indigo-700' 
+               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
+        Products
+    </a>
+
+    <a href="{{ route('admin.categories.index') }}" 
+       class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out
+           {{ request()->routeIs('admin.categories.index') 
+               ? 'border-indigo-500 text-gray-900 focus:border-indigo-700' 
+               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
+        Categories
+    </a>
+
+    <a href="{{ route('admin.orders.index') }}" 
+       class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out
+           {{ request()->routeIs('admin.orders.index') 
+               ? 'border-indigo-500 text-gray-900 focus:border-indigo-700' 
+               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
+        Orders
+    </a>
+                    </div>
+
                     </div>
 
                     <!-- User Menu -->
@@ -99,6 +104,9 @@
             <!-- Mobile menu -->
             <div id="mobile-menu" class="hidden sm:hidden border-t border-gray-200">
                 <div class="pt-2 pb-3 space-y-1">
+                    <a href="{{ route('admin.dashboard') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Dashboard
+                    </a>
                     <a href="{{ route('admin.products.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-indigo-500 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition duration-150 ease-in-out">
                         Products
                     </a>
@@ -107,9 +115,6 @@
                     </a>
                     <a href="{{ route('admin.orders.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                         Orders
-                    </a>
-                    <a href="{{ route('dashboard') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
-                        Dashboard
                     </a>
                 </div>
 

@@ -212,7 +212,7 @@
                 <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Pending Orders</p>
             </a>
 
-            <a href="#" id="export-report" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group">
+            <a href="{{ route('admin.reports.export') }}" id="export-report" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group">
                 <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600 mb-4 group-hover:bg-green-200 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -235,7 +235,7 @@
                 </button>
             </div>
             
-            <form action="#" method="POST">
+            <form action="{{ route('admin.reports.export') }}" method="POST">
                 @csrf
                 <div class="mb-6">
                     <label for="report-type" class="block text-sm font-medium text-gray-700 mb-2">Report Type</label>
