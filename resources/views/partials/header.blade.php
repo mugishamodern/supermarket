@@ -1,171 +1,163 @@
 <!-- resources/views/partials/_header.blade.php -->
-<header class="bg-white shadow-sm">
-    <!-- Main header with search -->
-    <div class="container py-3">
-        <div class="row align-items-center">
-            <!-- Toggle button for mobile -->
-            <div class="col-auto d-md-none">
-                <button class="btn border-0" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-3">
+    <div class="flex items-center justify-between">
+      <!-- Mobile menu button -->
+      <button id="mobileMenuToggle" class=" focus:outline-none" aria-label="Toggle navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
 
-            <!-- Logo -->
-            <div class="col-auto">
-                <a href="{{ route('home') }}" class="text-decoration-none">
-                    <img src="/udploads/images/mukora-logo.png" alt="Mukora Supermarket" height="35">
-                </a>
-            </div>
+      <!-- Logo -->
+      <a href="{{ route('home') }}" class="flex-shrink-0">
+        <img src="/uploads/images/mukora-logo.png" alt="Mukora Supermarket" class="h-9">
+      </a>
 
-            <!-- Search Bar -->
-            <div class="col">
-                <form action="{{ route('products.index') }}" method="GET" class="d-flex">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control border-end-0" placeholder="Search products, brands and categories">
-                        <button type="submit" class="btn btn-warning text-white px-4">
-                            Search
-                        </button>
-                    </div>
+      <!-- Search -->
+      <div class="relative flex-1 mx-4 hidden md:block">
+        <input id="desktopSearch" type="text" name="search" class="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-orange-200" placeholder="Search products, brands, categories">
+        <button id="desktopSearchBtn" class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">Go</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center space-x-4">
+        <!-- Account -->
+        <div class="relative">
+          <button id="accountToggle" class="flex items-center focus:outline-none" aria-haspopup="true" aria-expanded="false">
+            <i class="far fa-user-circle text-xl"></i>
+            <span class="ml-1 hidden lg:inline">Account</span>
+            <i class="fas fa-chevron-down ml-1 text-sm hidden lg:inline"></i>
+          </button>
+          <ul id="accountMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
+            @auth
+              <li><a href="{{ route('user.profile') }}" class="block px-4 py-2 hover:bg-gray-100">My Profile</a></li>
+              <li><a href="{{ route('orders.index') }}" class="block px-4 py-2 hover:bg-gray-100">My Orders</a></li>
+              <li><hr class="my-1"></li>
+              <li>
+                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                  @csrf
+                  <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
                 </form>
-            </div>
-
-            <!-- Account -->
-            <div class="col-auto ms-3">
-                <div class="dropdown">
-                    <a href="#" class="text-decoration-none text-dark d-flex align-items-center" data-bs-toggle="dropdown">
-                        <i class="far fa-user-circle me-2 fs-4"></i>
-                        <div class="d-none d-lg-block">
-                            <span>Account</span>
-                            <i class="fas fa-chevron-down small ms-1"></i>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu shadow">
-                        @auth
-                            <li><a class="dropdown-item" href="{{ route('user.profile') }}">My Profile</a></li>
-                            <li><a class="dropdown-item" href="{{ route('orders.index') }}">My Orders</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">Logout</button>
-                                </form>
-                            </li>
-                        @else
-                            <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
-                            <li><a class="dropdown-item" href="{{ route('register') }}">Register</a></li>
-                        @endauth
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Help -->
-            <div class="col-auto d-none d-lg-block">
-                <div class="dropdown">
-                    <a href="#" class="text-decoration-none text-dark d-flex align-items-center" data-bs-toggle="dropdown">
-                        <i class="far fa-question-circle me-2 fs-4"></i>
-                        <span>Help</span>
-                        <i class="fas fa-chevron-down small ms-1"></i>
-                    </a>
-                    <ul class="dropdown-menu shadow">
-                        <li><a class="dropdown-item" href="#">Customer Service</a></li>
-                        <li><a class="dropdown-item" href="#">FAQs</a></li>
-                        <li><a class="dropdown-item" href="{{ route('contact') }}">Contact Us</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Cart -->
-            <div class="col-auto">
-                <a href="{{ route('cart.index') }}" class="text-decoration-none text-dark d-flex align-items-center">
-                    <div class="position-relative">
-                        <i class="fas fa-shopping-cart fs-4"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
-                            0
-                        </span>
-                    </div>
-                    <span class="ms-2 d-none d-lg-inline">Cart</span>
-                </a>
-            </div>
+              </li>
+            @else
+              <li><a href="{{ route('login') }}" class="block px-4 py-2 hover:bg-gray-100">Login</a></li>
+              <li><a href="{{ route('register') }}" class="block px-4 py-2 hover:bg-gray-100">Register</a></li>
+            @endauth
+          </ul>
         </div>
+
+        <!-- Help -->
+        <div class="relative hidden lg:block">
+          <button id="helpToggle" class="flex items-center focus:outline-none" aria-haspopup="true" aria-expanded="false">
+            <i class="far fa-question-circle text-xl"></i>
+            <span class="ml-1">Help</span>
+            <i class="fas fa-chevron-down ml-1 text-sm"></i>
+          </button>
+          <ul id="helpMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Customer Service</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">FAQs</a></li>
+            <li><a href="{{ route('contact') }}" class="block px-4 py-2 hover:bg-gray-100">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Cart -->
+        <a href="{{ route('cart.index') }}" class="flex items-center relative" id="cartLink">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <span id="cartCount" class="absolute -top-1 -right-2 bg-yellow-500 text-black text-xs rounded-full px-1">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+          <span class="ml-2 hidden lg:inline">Cart</span>
+        </a>
+      </div>
     </div>
 
-   <!-- Categories Navigation -->
-<nav class="navbar navbar-expand-md navbar-light bg-white border-top">
-    <div class="container">
-        <!-- Mobile Toggle Button (Missing in original) -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                @php
-                    $navItems = [
-                        ['route' => 'home', 'name' => 'Home', 'path' => '/'],
-                        ['route' => 'products.index', 'name' => 'Products', 'path' => 'products*'],
-                        ['route' => 'promotions', 'name' => 'Promotions', 'path' => 'promotions*'], 
-                        ['route' => 'about', 'name' => 'About Us', 'path' => 'about*'],
-                        ['route' => 'contact', 'name' => 'Contact', 'path' => 'contact*']
-                    ];
-                @endphp
-                
-                @foreach($navItems as $item)
-                    <li class="nav-item mx-2">
-                        <a class="nav-link {{ Request::is($item['path']) ? 'active fw-bold' : '' }}" 
-                           href="{{ route($item['route']) }}">
-                            {{ $item['name'] }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+    <!-- Mobile menu -->
+    <div id="mobileDropdown" class="hidden md:hidden mt-4 bg-white border-t border-gray-200">
+      <ul>
+        @foreach($categories as $cat)
+          <li class="px-4 py-3 border-b border-gray-100 hover:bg-gray-50">
+          <a href="{{ route('categories.show', ['category' => $cat->slug]) }}">
+    {{ $cat->name }}
+        </a>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M5 21v-4m14-8V3m0 18v-4M3 5h4m12 0h4M3 19h4m12 0h4M8 12h8" />
+              </svg>
+              <span>{{ $cat->name }}</span>
+            </a>
+          </li>
+        @endforeach
+      </ul>
     </div>
-</nav>
-    <!-- Breadcrumb Navigation -->
-<div class="breadcrumb-container py-2 bg-light border-bottom">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb m-0" style="--bs-breadcrumb-divider: '>';">
-                <li class="breadcrumb-item">
-                    <a href="{{ route('home') }}" class="text-decoration-none text-muted small">Home</a>
-                </li>
-                
-                @if(isset($breadcrumbs) && is_array($breadcrumbs))
-                    @foreach($breadcrumbs as $breadcrumb)
-                        @if($loop->last)
-                            <li class="breadcrumb-item active small" aria-current="page">
-                                {{ $breadcrumb['name'] }}
-                            </li>
-                        @else
-                            <li class="breadcrumb-item">
-                                <a href="{{ $breadcrumb['url'] }}" class="text-decoration-none text-muted small">
-                                    {{ $breadcrumb['name'] }}
-                                </a>
-                            </li>
-                        @endif
-                    @endforeach
-                @elseif(isset($category))
-                    <li class="breadcrumb-item active small" aria-current="page">
-                        {{ $category->name }}
-                    </li>
-                @elseif(isset($product))
-                    @if(isset($product->category))
-                        <li class="breadcrumb-item">
-                            <a href="{{ route('products.category', $product->category->slug) }}" class="text-decoration-none text-muted small">
-                                {{ $product->category->name }}
-                            </a>
-                        </li>
-                    @endif
-                    <li class="breadcrumb-item active small" aria-current="page">
-                        {{ $product->name }}
-                    </li>
-                @elseif(isset($title))
-                    <li class="breadcrumb-item active small" aria-current="page">
-                        {{ $title }}
-                    </li>
-                @endif
-            </ol>
-        </nav>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="bg-gray-800 border-t border-gray-700">
+    <div class="container mx-auto px-4 py-2">
+      <nav aria-label="breadcrumb">
+        <ol class="flex text-sm text-gray-300">
+          <li><a href="{{ route('home.index') }}" class="hover:text-white">Home</a></li>
+          @if(!empty($breadcrumbs))
+            @foreach($breadcrumbs as $bc)
+              <li class="mx-2">/</li>
+              @if($loop->last)
+                <li class="text-gray-100">{{ $bc['name'] }}</li>
+              @else
+                <li><a href="{{ $bc['url'] }}" class="hover:text-white">{{ $bc['name'] }}</a></li>
+              @endif
+            @endforeach
+          @endif
+        </ol>
+      </nav>
     </div>
-</div>
+  </div>
 </header>
+
+<style>
+  #mobileDropdown ul { list-style: none; padding: 0; margin: 0; }
+  /* Transition for menus */
+  #mobileDropdown, #accountMenu, #helpMenu { transition: max-height 0.3s ease; overflow: hidden; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Utility to toggle visibility with animation
+    function toggleMenu(button, menu) {
+      button.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        if (menu.style.maxHeight) {
+          menu.style.maxHeight = null;
+          setTimeout(() => menu.classList.add('hidden'), 300);
+        } else {
+          menu.classList.remove('hidden');
+          menu.style.maxHeight = menu.scrollHeight + 'px';
+        }
+      });
+      document.addEventListener('click', e => { if (!button.contains(e.target)) {
+        menu.style.maxHeight = null;
+        setTimeout(() => menu.classList.add('hidden'), 300);
+      }});
+    }
+
+    // Mobile toggle
+    const mobileBtn = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileDropdown');
+    mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    // Account & Help
+    toggleMenu(document.getElementById('accountToggle'), document.getElementById('accountMenu'));
+    toggleMenu(document.getElementById('helpToggle'), document.getElementById('helpMenu'));
+
+    // Search interactivity
+    const searchInput = document.getElementById('desktopSearch');
+    const searchBtn = document.getElementById('desktopSearchBtn');
+    searchBtn.addEventListener('click', () => {
+      const query = searchInput.value.trim();
+      if (query) window.location.href = `{{ route('products.index') }}?search=` + encodeURIComponent(query);
+    });
+    searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchBtn.click(); });
+
+    // Update cart count live (example event listener)
+    window.addEventListener('cart-updated', e => {
+      document.getElementById('cartCount').textContent = e.detail.count;
+    });
+  });
+</script>

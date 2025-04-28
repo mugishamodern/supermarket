@@ -15,7 +15,7 @@
             <div class="col-md-4 mb-4 mb-md-0">                 
                 <h5 class="text-white mb-3">Quick Links</h5>                 
                 <ul class="list-unstyled footer-links">                     
-                    <li><a href="{{ route('home') }}">Home</a></li>                     
+                    <li><a href="{{ route('home.index') }}">Home</a></li>                     
                     <li><a href="{{ route('products.index') }}">Products</a></li>                     
                     <li><a href="{{ route('promotions') }}">Special Offers</a></li>                     
                     <li><a href="{{ route('about') }}">About Us</a></li>                     

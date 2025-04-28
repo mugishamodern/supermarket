@@ -10,28 +10,47 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+<body class="font-sans antialiased bg-gray-100">
+    <!-- Debug area (only in debug mode) -->
+    @if(config('app.debug'))
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+            <!-- Show any PHP errors -->
+            @php
+                $errors = error_get_last();
+                if ($errors) {
+                    echo '<p class="font-medium">Debug Error:</p>';
+                    echo '<p>' . $errors['message'] . '</p>';
+                } else {
+                    echo '<p class="font-medium">Debug Mode Active</p>';
+                }
+            @endphp
+        </div>
+    @endif
+
+    <div class="min-h-screen flex flex-col">
         <!-- Admin Navigation -->
-        <nav class="bg-white border-b border-gray-200">
+        <nav class="bg-white border-b border-gray-200 z-30 fixed w-full">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center">
-                            <a href="{{ route('admin.products.index') }}" class="font-bold text-xl text-gray-800">
-                                Admin Panel
+                            <a href="{{ route('admin.products.index') }}" class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                </svg>
+                                <span class="font-bold text-xl text-gray-800">Admin Panel</span>
                             </a>
                         </div>
 
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <a href="{{ route('admin.products.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
+                            <a href="{{ route('admin.products.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-500 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
                                 Products
                             </a>
                             <a href="{{ route('admin.categories.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -50,10 +69,15 @@
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <div class="ml-3 relative">
                             <div class="flex items-center">
-                                <span class="text-gray-700 mr-2">{{ Auth::user()->name }}</span>
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center mr-2">
+                                        {{ substr(Auth::user()->name, 0, 1) }}
+                                    </div>
+                                    <span class="text-gray-700 mr-3">{{ Auth::user()->name }}</span>
+                                </div>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">
+                                    <button type="submit" class="text-sm text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md transition-colors">
                                         Log Out
                                     </button>
                                 </form>
@@ -73,9 +97,9 @@
             </div>
 
             <!-- Mobile menu -->
-            <div id="mobile-menu" class="hidden sm:hidden">
+            <div id="mobile-menu" class="hidden sm:hidden border-t border-gray-200">
                 <div class="pt-2 pb-3 space-y-1">
-                    <a href="{{ route('admin.products.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-indigo-400 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition duration-150 ease-in-out">
+                    <a href="{{ route('admin.products.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-indigo-500 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition duration-150 ease-in-out">
                         Products
                     </a>
                     <a href="{{ route('admin.categories.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -90,9 +114,12 @@
                 </div>
 
                 <!-- Responsive User Menu -->
-                <div class="pt-4 pb-1 border-t border-gray-200">
+                <div class="pt-4 pb-3 border-t border-gray-200 bg-gray-50">
                     <div class="flex items-center px-4">
-                        <div class="ml-3">
+                        <div class="h-10 w-10 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center mr-3">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                        <div>
                             <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                             <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
                         </div>
@@ -101,7 +128,7 @@
                     <div class="mt-3 space-y-1">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                            <button type="submit" class="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                                 Log Out
                             </button>
                         </form>
@@ -110,43 +137,71 @@
             </div>
         </nav>
 
+        <!-- Spacer to prevent content from hiding under fixed navbar -->
+        <div class="h-16"></div>
+
         <!-- Page Heading -->
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <h1 class="font-semibold text-xl text-gray-800 leading-tight">
                     @yield('header')
-                </h2>
+                </h1>
             </div>
         </header>
 
         <!-- Page Content -->
-        <main>
-            <div class="py-12">
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6 bg-white border-b border-gray-200">
-                            @if (session('success'))
-                                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                                    <span class="block sm:inline">{{ session('success') }}</span>
+        <main class="flex-grow">
+            <div class="py-6">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <!-- Alert Messages -->
+                    @if (session('success'))
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow" role="alert">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
                                 </div>
-                            @endif
-
-                            @if (session('error'))
-                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                                    <span class="block sm:inline">{{ session('error') }}</span>
+                                <div class="ml-3">
+                                    <p class="text-sm">{{ session('success') }}</p>
                                 </div>
-                            @endif
-
-                            @yield('content')
+                            </div>
                         </div>
-                    </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow" role="alert">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm">{{ session('error') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Main Content -->
+                    @yield('content')
                 </div>
             </div>
         </main>
+        
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200 py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <p class="text-center text-sm text-gray-500">
+                    &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.
+                </p>
+            </div>
+        </footer>
     </div>
 
     <script>
-        // Simple toggle for mobile menu
+        // Toggle for mobile menu
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');

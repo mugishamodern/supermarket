@@ -8,7 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
-
+use App\Http\Controllers\Admin\DashboardController;
 // Home/welcome page
 Route::get('/', function () {
     return view('welcome');
@@ -63,11 +63,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/address', [HomeController::class, 'storeAddress'])->name('profile.address.store');
 });
 
-// Admin routes (should be protected with proper middleware in a real app)
-Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
-    Route::resource('products', ProductController::class)->except(['show']);
-    Route::resource('categories', CategoryController::class)->except(['show']);
-    Route::resource('orders', OrderController::class);
+Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function() {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('products', App\Http\Controllers\ProductController::class)->except(['show']);
+    Route::resource('categories', App\Http\Controllers\CategoryController::class)->except(['show']);
+    Route::resource('orders', App\Http\Controllers\OrderController::class);
 });
+
 
 require __DIR__.'/auth.php';

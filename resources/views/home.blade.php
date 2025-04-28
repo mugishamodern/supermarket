@@ -51,6 +51,10 @@
         transform: scale(0.85);
         transition: all 0.5s ease;
     }
+
+    /* hide scrollbar */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     
     .slick-center .testimonial-slide {
         opacity: 1;
@@ -380,194 +384,118 @@
     </div>
 </section>
 
-<!-- Testimonials Section with Center Mode Slider -->
+<!-- Testimonials Section with Center-Mode Slider -->
 <section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our Customers Say</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Don't just take our word for it - hear what our customers have to say about their shopping experience.</p>
-        </div>
-        
-        <div class="testimonial-slider">
-            <!-- Testimonial 1 -->
-            <div class="px-4">
-                <div class="testimonial-slide bg-white p-6 rounded-2xl shadow-md">
-                    <div class="flex items-center space-x-4 mb-4">
-                        <img src="/images/customer1.jpg" alt="Customer" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
-                        <div>
-                            <h5 class="font-semibold text-lg">Jane Doe</h5>
-                            <p class="text-gray-500 text-sm">Kasese Town</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                        </svg>
-                        <p class="text-gray-600 italic mb-4 pl-6">
-                            "I love shopping at Mukora Supermarket. Their products are always fresh, and the staff is incredibly helpful. The online ordering system is so convenient!"
-                        </p>
-                    </div>
-                    <div class="flex text-yellow-400">
-                    <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Testimonial 2 -->
-            <div class="px-4">
-                <div class="testimonial-slide bg-white p-6 rounded-2xl shadow-md">
-                    <div class="flex items-center space-x-4 mb-4">
-                        <img src="/images/customer2.jpg" alt="Customer" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
-                        <div>
-                            <h5 class="font-semibold text-lg">John Smith</h5>
-                            <p class="text-gray-500 text-sm">Kisinga</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                        </svg>
-                        <p class="text-gray-600 italic mb-4 pl-6">
-                            "The online delivery service is a game-changer! I can get everything I need without leaving my home. Fast and reliable with excellent customer service."
-                        </p>
-                    </div>
-                    <div class="flex text-yellow-400">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Testimonial 3 -->
-            <div class="px-4">
-                <div class="testimonial-slide bg-white p-6 rounded-2xl shadow-md">
-                    <div class="flex items-center space-x-4 mb-4">
-                        <img src="/images/customer3.jpg" alt="Customer" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
-                        <div>
-                            <h5 class="font-semibold text-lg">Sarah Johnson</h5>
-                            <p class="text-gray-500 text-sm">Kilembe</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                        </svg>
-                        <p class="text-gray-600 italic mb-4 pl-6">
-                            "The variety of products is impressive. I can find everything from local produce to imported goods all in one place. Best supermarket in Kasese!"
-                        </p>
-                    </div>
-                    <div class="flex text-yellow-400">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Testimonial 4 -->
-            <div class="px-4">
-                <div class="testimonial-slide bg-white p-6 rounded-2xl shadow-md">
-                    <div class="flex items-center space-x-4 mb-4">
-                        <img src="/images/customer4.jpg" alt="Customer" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
-                        <div>
-                            <h5 class="font-semibold text-lg">Michael Kiiza</h5>
-                            <p class="text-gray-500 text-sm">Bwera</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                        </svg>
-                        <p class="text-gray-600 italic mb-4 pl-6">
-                            "Their loyalty program is excellent - I've saved so much money with the points system. The monthly promotions are always worth checking out!"
-                        </p>
-                    </div>
-                    <div class="flex text-yellow-400">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our Customers Say</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Don't just take our word for it—hear what our customers have to say about their shopping experience.</p>
     </div>
+
+    <div class="relative">
+      <!-- Slider -->
+      <div id="testimonialSlider" class="flex space-x-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+        <!-- Slide 1 -->
+        <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <div class="flex items-center space-x-4 mb-4">
+              <img src="/images/customer1.jpg" alt="Jane Doe" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
+              <div>
+                <h5 class="font-semibold text-lg">Jane Doe</h5>
+                <p class="text-gray-500 text-sm">Kasese Town</p>
+              </div>
+            </div>
+            <div class="relative mb-4">
+              <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+              </svg>
+              <p class="text-gray-600 italic pl-6">I love shopping at Mukora Supermarket. Their products are always fresh, and the staff is incredibly helpful. The online ordering system is so convenient!</p>
+            </div>
+            <div class="flex text-yellow-400">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <div class="flex items-center space-x-4 mb-4">
+              <img src="/images/customer2.jpg" alt="John Smith" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
+              <div>
+                <h5 class="font-semibold text-lg">John Smith</h5>
+                <p class="text-gray-500 text-sm">Kisinga</p>
+              </div>
+            </div>
+            <div class="relative mb-4">
+              <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+              </svg>
+              <p class="text-gray-600 italic pl-6">The online delivery service is a game-changer! I can get everything I need without leaving my home. Fast and reliable with excellent customer service.</p>
+            </div>
+            <div class="flex text-yellow-400">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <div class="flex items-center space-x-4 mb-4">
+              <img src="/images/customer3.jpg" alt="Sarah Johnson" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
+              <div>
+                <h5 class="font-semibold text-lg">Sarah Johnson</h5>
+                <p class="text-gray-500 text-sm">Kilembe</p>
+              </div>
+            </div>
+            <div class="relative mb-4">
+              <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+              </svg>
+              <p class="text-gray-600 italic pl-6">The variety of products is impressive. I can find everything from local produce to imported goods all in one place. Best supermarket in Kasese!</p>
+            </div>
+            <div class="flex text-yellow-400">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 4 -->
+        <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <div class="flex items-center space-x-4 mb-4">
+              <img src="/images/customer4.jpg" alt="Michael Kiiza" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
+              <div>
+                <h5 class="font-semibold text-lg">Michael Kiiza</h5>
+                <p class="text-gray-500 text-sm">Bwera</p>
+              </div>
+            </div>
+            <div class="relative mb-4">
+              <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+              </svg>
+              <p class="text-gray-600 italic pl-6">Their loyalty program is excellent - I've saved so much money with the points system. The monthly promotions are always worth checking out!</p>
+            </div>
+            <div class="flex text-yellow-400">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav Buttons -->
+      <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 focus:outline-none">
+        <svg class="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button id="nextBtn" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 focus:outline-none">
+        <svg class="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
 </section>
 
-<!-- Mobile App Promotion -->
-<section class="py-16 bg-red-600 text-white relative overflow-hidden">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div class="relative z-10">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Shop Anytime, Anywhere</h2>
-                <p class="text-lg mb-6">Download our mobile app and get the convenience of Mukora Supermarket in your pocket. Place orders, track deliveries, and earn rewards.</p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#" class="bg-black text-white rounded-lg px-4 py-2 flex items-center hover:bg-gray-900 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.707 9.293l-5.707-5.707-1.414 1.414 5.707 5.707-5.707 5.707 1.414 1.414 5.707-5.707 1.293 1.293v-4.414l-1.293 1.293z"/>
-                        </svg>
-                        <div>
-                            <span class="text-xs">Download on the</span>
-                            <p class="text-sm font-semibold">App Store</p>
-                        </div>
-                    </a>
-                    <a href="#" class="bg-black text-white rounded-lg px-4 py-2 flex items-center hover:bg-gray-900 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3.372 5.002c.542-3.604 3.565-5.002 3.565-5.002s-.89 2.145-1.372 3c-1.01 1.792-2.193 1.909-2.193 2.002"/>
-                            <path d="M19.872 19.008c-1.939.715-3.252-1.008-5.872-1.008-2.773 0-3.725 1.684-5.679 1.684-1.663 0-2.946-1.152-4.175-3.148-2.038-3.317-2.143-9.536 3.248-9.536 2.22 0 3.586 1.394 5.38 1.394 1.716 0 3.267-1.394 5.778-1.394 2.584 0 4.321 1.716 4.448 4.042-6.781 2.747-5.546 8.711 0 8.97-1.067 3.284-4.303 3.524-3.128-.004z"/>
-                        </svg>
-                        <div>
-                            <span class="text-xs">GET IT ON</span>
-                            <p class="text-sm font-semibold">Google Play</p>
-                        </div>
-                    </a>
-                </div>
-                
-                <!-- QR Code -->
-                <div class="mt-6 bg-white p-4 rounded-lg inline-block">
-                    <div class="text-center">
-                        <div class="bg-black p-2 rounded-lg mb-2 inline-block">
-                            <!-- Placeholder for QR code -->
-                            <div class="w-24 h-24 bg-white grid grid-cols-4 grid-rows-4 gap-1">
-                                <div class="bg-black col-span-1 row-span-1"></div>
-                                <div class="bg-black col-span-1 row-span-1"></div>
-                                <div class="bg-black col-span-1 row-span-1"></div>
-                                <div class="bg-black col-span-1 row-span-1"></div>
-                                <!-- More QR code blocks would go here -->
-                            </div>
-                        </div>
-                        <p class="text-black text-xs">Scan to download</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="relative mx-auto hidden md:block">
-                <div class="relative transform rotate-12 hover:rotate-0 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent rounded-3xl"></div>
-                    <img src="/images/mobile-app.png" alt="Mobile App" class="w-64 mx-auto rounded-3xl shadow-xl">
-                </div>
-                <div class="absolute top-0 right-0 -mr-8 -mt-8 w-24 h-24 bg-yellow-400 rounded-full blur-2xl opacity-60"></div>
-                <div class="absolute bottom-0 left-0 -ml-8 -mb-8 w-32 h-32 bg-red-400 rounded-full blur-2xl opacity-60"></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Decorative elements -->
-    <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div class="absolute top-1/2 left-0 w-64 h-64 bg-red-700 rounded-full blur-3xl opacity-40"></div>
-        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-red-800 rounded-full blur-3xl opacity-40"></div>
-    </div>
-</section>
 
 <!-- Newsletter Section with Animated Background -->
 <section class="py-16 bg-gray-900 text-white relative overflow-hidden">
@@ -681,7 +609,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Alpine.js for data & controls (only tailwind classes in CSS) -->
+<script src="//unpkg.com/alpinejs" defer></script></script>
 <script>
+      document.addEventListener('alpine:init', () => {
+    Alpine.data('testimonials', () => ({
+      testimonials: [
+        {
+          name: 'Jane Doe', location: 'Kasese Town',
+          photo: '/images/customer1.jpg',
+          quote: '“I love shopping at Mukora… convenient!”',
+          stars: '★★★★★'
+        },
+        {
+          name: 'John Smith', location: 'Kisinga',
+          photo: '/images/customer2.jpg',
+          quote: '“Fast and reliable with excellent customer service.”',
+          stars: '★★★★½'
+        },
+        {
+          name: 'Sarah Johnson', location: 'Kilembe',
+          photo: '/images/customer3.jpg',
+          quote: '“Best supermarket in Kasese!”',
+          stars: '★★★★★'
+        },
+        {
+          name: 'Michael Kiiza', location: 'Bwera',
+          photo: '/images/customer4.jpg',
+          quote: '“Their loyalty program is excellent.”',
+          stars: '★★★★★'
+        },
+      ],
+      init() {
+        this.$nextTick(() => {
+          const slider = this.$refs.slider;
+          document.getElementById('prevBtn').onclick = () => slider.scrollBy({ left: -slider.clientWidth * 0.8, behavior: 'smooth' });
+          document.getElementById('nextBtn').onclick = () => slider.scrollBy({ left: slider.clientWidth * 0.8, behavior: 'smooth' });
+        });
+      }
+    }));
+  });
+
     $(document).ready(function() {
         // Initialize AOS animations
         AOS.init({
