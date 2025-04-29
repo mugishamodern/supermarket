@@ -1,6 +1,6 @@
 {{-- resources/views/categories/show.blade.php --}}
 @extends('layouts.app')
-
+@include('partials.header')
 @section('content')
 <section class="py-16">
     <div class="container mx-auto px-4">

@@ -194,22 +194,22 @@
         <h3 class="text-center mb-5">Trusted Brands We Carry</h3>
         <div class="row align-items-center justify-content-between">
             <div class="col-md-2 col-4 mb-4 text-center">
-                <img src="/images/brands/brand1.png" alt="Brand" class="brand-logo">
+                <img src="uploads\images\brands\brand1.png" alt="Brand" class="brand-logo">
             </div>
             <div class="col-md-2 col-4 mb-4 text-center">
-                <img src="/images/brands/brand2.png" alt="Brand" class="brand-logo">
+                <img src="uploads\images\brands\brand2.png" alt="Brand" class="brand-logo">
             </div>
             <div class="col-md-2 col-4 mb-4 text-center">
-                <img src="/images/brands/brand3.png" alt="Brand" class="brand-logo">
+                <img src="uploads\images\brands\brand3.png" alt="Brand" class="brand-logo">
             </div>
             <div class="col-md-2 col-4 mb-4 text-center">
-                <img src="/images/brands/brand4.png" alt="Brand" class="brand-logo">
+                <img src="uploads\images\brands\brand4.png" alt="Brand" class="brand-logo">
             </div>
             <div class="col-md-2 col-4 mb-4 text-center">
-                <img src="/images/brands/brand5.png" alt="Brand" class="brand-logo">
+                <img src="uploads\images\brands\brand5.png" alt="Brand" class="brand-logo">
             </div>
             <div class="col-md-2 col-4 mb-4 text-center">
-                <img src="/images/brands/brand6.png" alt="Brand" class="brand-logo">
+                <img src="uploads\images\brands\brand6.png" alt="Brand" class="brand-logo">
             </div>
         </div>
     </div>

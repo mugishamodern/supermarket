@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'My Orders - Mukora Supermarket')
-
+@include('partials.header')
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">

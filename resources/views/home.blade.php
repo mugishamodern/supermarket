@@ -571,6 +571,35 @@
 <!-- Alpine.js for data & controls (only tailwind classes in CSS) -->
 <script src="//unpkg.com/alpinejs" defer></script></script>
 <script>
+// SET your offer end time here (Year, Month (0-11), Day, Hour, Minute, Second)
+const endDate = new Date("2025-05-01T23:59:59").getTime();
+
+// Countdown
+const countdown = setInterval(function() {
+    const now = new Date().getTime();
+    const distance = endDate - now;
+
+    if (distance < 0) {
+        clearInterval(countdown);
+        document.getElementById("countdown-timer").innerHTML = "<span class='text-sm'>Expired</span>";
+        return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown-days").innerText = String(days).padStart(2, '0');
+    document.getElementById("countdown-hours").innerText = String(hours).padStart(2, '0');
+    document.getElementById("countdown-minutes").innerText = String(minutes).padStart(2, '0');
+    document.getElementById("countdown-seconds").innerText = String(seconds).padStart(2, '0');
+}, 1000);
+
+// Close banner
+document.getElementById('close-banner').addEventListener('click', function() {
+    document.getElementById('announcement-banner').style.display = 'none';
+});
       document.addEventListener('alpine:init', () => {
     Alpine.data('testimonials', () => ({
       testimonials: [

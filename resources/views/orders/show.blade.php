@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Order Details - Mukora Supermarket')
-
+@include('partials.header')
 @section('content')
 <div class="container py-5">
     <div class="mb-4">

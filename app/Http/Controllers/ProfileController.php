@@ -8,13 +8,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Category;
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function show(Request $request): View
+    {
+        $categories = Category::all(); // Get all categories
+        
+        return view('profile.user', [
+            'user' => $request->user(),
+            'categories' => $categories, // Pass categories to the view
+        ]);
+    }public function edit(Request $request): View
     {
         return view('profile.edit', [
             'user' => $request->user(),
@@ -57,4 +66,10 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+    public function create()
+{   
+    // Fetch categories from your database
+    $categories = \App\Models\Category::all(); // Adjust this based on your model name
+    return view('profile.user', compact('categories'));  
+}
 }
