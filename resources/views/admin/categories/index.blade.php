@@ -41,7 +41,7 @@
                             <div class="text-sm text-gray-500">{{ $category->slug }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-500">{{ $category->products_count ?? $category->products->count() }}</div>
+                            <div class="text-sm text-gray-500">{{ $category->products_count }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">

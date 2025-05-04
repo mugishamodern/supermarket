@@ -49,7 +49,7 @@ class LoginController extends Controller
 
             if (empty($redirectPath)) {
                 // Fallback to products page (not properties)
-                return redirect()->route('products.index')->with('success', 'Login successful!');
+                return redirect()->route('home.index')->with('success', 'Login successful!');
             }
 
             return redirect()->route($redirectPath)->with('success', 'Login successful!');
@@ -68,6 +68,6 @@ class LoginController extends Controller
      */
     protected function getredirectedBasedOnRole($user)
     {
-        return $user->is_admin ? 'admin.dashboard' : 'products.index';
+        return $user->is_admin ? 'admin.dashboard' : 'home';
     }
 }

@@ -7,7 +7,7 @@
 
 @section('content')
     <!-- Statistics Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <!-- Total Products Card -->
         <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
             <div class="flex justify-between items-center mb-2">
@@ -52,7 +52,7 @@
                     </svg>
                 </span>
             </div>
-            <p class="text-3xl font-bold text-gray-800">${{ number_format($monthlyRevenue, 2) }}</p>
+            <p class="text-3xl font-bold text-gray-800">UGX {{ number_format($monthlyRevenue, 2) }}</p>
             <div class="flex items-center mt-2">
                 @if($revenueChange > 0)
                     <span class="text-green-500 font-medium">+{{ $revenueChange }}%</span>
@@ -60,6 +60,23 @@
                     <span class="text-red-500 font-medium">{{ $revenueChange }}%</span>
                 @endif
                 <span class="text-gray-500 text-sm ml-1">from last month</span>
+            </div>
+        </div>
+
+        <!-- Total Users Card -->
+        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-gray-700">Total Clients Number</h3>
+                <span class="text-indigo-600 bg-indigo-100 p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9.004 9.004 0 0112 15c2.21 0 4.21.802 5.879 2.137M15 11a3 3 0 10-6 0 3 3 0 006 0z" />
+                    </svg>
+                </span>
+            </div>
+            <p class="text-3xl font-bold text-gray-800">{{ $totalOrders }}</p>
+            <div class="flex items-center mt-2">
+                <span class="text-yellow-500 font-medium">{{ $pendingOrders }}</span>
+                <span class="text-gray-500 text-sm ml-1">active clients</span>
             </div>
         </div>
     </div>
@@ -108,7 +125,7 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap font-medium">${{ number_format($order->total, 2) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">UGX {{ number_format($order->total, 2) }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -219,6 +236,18 @@
                     </svg>
                 </div>
                 <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Export Sales Report</p>
+            </a>
+        </div>
+
+        <h3 class="text-lg font-semibold text-gray-700 mb-8">FeedBack Handling</h3>
+        <div class="grid grid-cols-2 md:grid-cols-2 gap-2 ">
+            <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group">
+                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 text-yellow-600 mb-4 group-hover:bg-yellow-200 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 3.866-3.582 7-8 7a8.44 8.44 0 01-4-.93L3 20l1.34-3.58A7.96 7.96 0 013 12c0-3.866 3.582-7 8-7s8 3.134 8 7z" />
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Feedback</p>
             </a>
         </div>
     </div>

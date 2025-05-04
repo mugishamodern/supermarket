@@ -164,7 +164,9 @@
                             </a>
                             
                             <button type="submit" class="btn btn-submit">
-                                Send Reset Link
+                                <a href="{{ route('password.email') }}">
+                                    Send Reset Link
+                                </a>
                             </button>
                         </div>
                     </form>

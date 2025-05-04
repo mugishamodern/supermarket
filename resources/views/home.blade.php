@@ -409,14 +409,13 @@
           <div class="flex-shrink-0 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 snap-center px-2">
             <div class="bg-white p-6 rounded-2xl shadow-md">
               <div class="flex items-center space-x-4 mb-4">
-                <img src="{{ $feedback->image ? asset('storage/'.$feedback->image) : asset('images/feedback-placeholder.jpg') }}" alt="{{ $feedback->name }}" class="w-16 h-16 rounded-full object-cover border-2 border-red-600">
+               {{-- <img src="{{ $feedback->image ? asset('storage/'.$feedback->image) : asset('images/feedback-placeholder.jpg') }}" alt="{{ $feedback->name }}" class="w-16 h-16 rounded-full object-cover border-2 border-red-600"> --}}
                 <div>
                   <h5 class="font-semibold text-lg">{{ $feedback->name }}</h5>
                   <p class="text-gray-500 text-sm">{{ $feedback->location }}</p>
                 </div>
               </div>
               <div class="relative mb-4">
-                <svg class="absolute -top-2 -left-2 w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                 </svg>
                 <p class="text-gray-600 italic pl-6">{{ $feedback->message }}</p>

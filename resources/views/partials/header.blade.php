@@ -71,22 +71,7 @@
     </div>
 
     <!-- Mobile menu -->
-    <div id="mobileDropdown" class="hidden md:hidden mt-4 bg-white border-t border-gray-200">
-      <ul>
-        @foreach($categories as $cat)
-          <li class="px-4 py-3 border-b border-gray-100 hover:bg-gray-50">
-          <a href="{{ route('categories.show', ['category' => $cat->slug]) }}">
-    {{ $cat->name }}
-        </a>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M5 21v-4m14-8V3m0 18v-4M3 5h4m12 0h4M3 19h4m12 0h4M8 12h8" />
-              </svg>
-              <span>{{ $cat->name }}</span>
-            </a>
-          </li>
-        @endforeach
-      </ul>
-    </div>
+    
   </div>
 
   <!-- Breadcrumb -->
@@ -109,6 +94,18 @@
       </nav>
     </div>
   </div>
+  <div id="mobileDropdown" class="hidden absolute top-12 left-2 z-50 bg-white rounded-sm shadow-md border border-gray-200 max-w-xs">
+  <ul class="py-0">
+    @foreach($categories as $cat)
+      <li>
+        <a href="{{ route('categories.show', ['category' => $cat->slug]) }}" 
+           class="flex items-center px-2 py-1 hover:bg-gray-50 transition-colors duration-200 text-gray-700">
+          <span class="text-xs">{{ $cat->name }}</span>
+        </a>
+      </li>
+    @endforeach
+  </ul>
+</div>
 </header>
 
 <style>

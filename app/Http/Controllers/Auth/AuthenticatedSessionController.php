@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.dashboard')->with('success', 'Login successful!');
         }
 
-        return redirect()->intended(route('products.index', absolute: false))->with('success', 'Login successful!');
+        return redirect()->intended(route('home.index', absolute: false))->with('success', 'Login successful!');
     }
 
     /**

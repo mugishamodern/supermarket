@@ -61,7 +61,7 @@
                         Total Amount
                     </dt>
                     <dd class="mt-1 text-sm text-gray-900">
-                        ${{ number_format($order->total_amount, 2) }}
+                        UGX {{ number_format($order->total_amount, 2) }}
                     </dd>
                 </div>
                 <div class="sm:col-span-1">
@@ -144,13 +144,13 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                ${{ number_format($item->price, 2) }}
+                                UGX {{ number_format($item->price, 2) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $item->quantity }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                ${{ number_format($item->price * $item->quantity, 2) }}
+                                UGX {{ number_format($item->price * $item->quantity, 2) }}
                             </td>
                         </tr>
                     @endforeach
@@ -161,7 +161,7 @@
                             Subtotal
                         </th>
                         <td class="px-6 py-3 text-sm text-gray-900">
-                            ${{ number_format($order->subtotal ?? $order->total_amount, 2) }}
+                            UGX {{ number_format($order->subtotal ?? $order->total_amount, 2) }}
                         </td>
                     </tr>
                     @if(isset($order->shipping_cost) && $order->shipping_cost > 0)
@@ -170,7 +170,7 @@
                             Shipping
                         </th>
                         <td class="px-6 py-3 text-sm text-gray-900">
-                            ${{ number_format($order->shipping_cost, 2) }}
+                            UGX {{ number_format($order->shipping_cost, 2) }}
                         </td>
                     </tr>
                     @endif
@@ -180,7 +180,7 @@
                             Tax
                         </th>
                         <td class="px-6 py-3 text-sm text-gray-900">
-                            ${{ number_format($order->tax, 2) }}
+                            UGX {{ number_format($order->tax, 2) }}
                         </td>
                     </tr>
                     @endif
@@ -189,7 +189,7 @@
                             Total
                         </th>
                         <td class="px-6 py-3 text-sm font-medium text-gray-900">
-                            ${{ number_format($order->total_amount, 2) }}
+                            UGX {{ number_format($order->total_amount, 2) }}
                         </td>
                     </tr>
                 </tfoot>
