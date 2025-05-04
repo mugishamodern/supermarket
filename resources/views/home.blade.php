@@ -325,19 +325,19 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div class="bg-white p-6 rounded-xl shadow-md">
-                <div class="counter-number" data-target="5000">0</div>
+                <div class="counter-number" data-target="5000">10</div>
                 <p class="text-gray-600 mt-2">Happy Customers</p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-md">
-                <div class="counter-number" data-target="100">0</div>
+                <div class="counter-number" data-target="100">20</div>
                 <p class="text-gray-600 mt-2">Local Farmers</p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-md">
-                <div class="counter-number" data-target="2500">0</div>
+                <div class="counter-number" data-target="2500">30</div>
                 <p class="text-gray-600 mt-2">Products</p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-md">
-                <div class="counter-number" data-target="10">0</div>
+                <div class="counter-number" data-target="10">40</div>
                 <p class="text-gray-600 mt-2">Years of Service</p>
             </div>
         </div>
