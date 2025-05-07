@@ -17,6 +17,8 @@ class CategoryController extends Controller
     {
         // Fetch categories, you can adjust pagination as needed
         $categories = Category::paginate(10);
+        // Update this line to include the products count
+        $categories = Category::withCount('products')->paginate(10);
         
         // Return the view with the categories data
         return view('admin.categories.index', compact('categories'));

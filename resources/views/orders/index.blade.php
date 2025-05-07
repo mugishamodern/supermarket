@@ -1,99 +1,183 @@
 @extends('layouts.app')
 
 @section('title', 'My Orders - Mukora Supermarket')
-@include('partials.header')
-@section('content')
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>My Orders</h1>
-        <a href="{{ route('products.index') }}" class="btn btn-danger">
-            <i class="fas fa-shopping-basket me-2"></i>Continue Shopping
-        </a>
-    </div>
-    
-    @if(session('success'))
-        <div class="alert alert-success mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
 
-    @if(session('error'))
-        <div class="alert alert-danger mb-4">
-            {{ session('error') }}
+@section('styles')
+<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/uploads/images/supermarket-bg.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 60vh;
+    }
+    .order-card, .empty-card {
+        transition: all 0.3s ease;
+    }
+    .order-card:hover, .empty-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .fade-in {
+        animation: fadeIn 0.8s ease-in forwards;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .parallax {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    .pagination .page-link {
+        color: #dc3545;
+        border-radius: 5px;
+        margin: 0 5px;
+        transition: background-color 0.3s ease;
+    }
+    .pagination .page-link:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+</style>
+@endsection
+
+@include('partials.header')
+
+@section('content')
+<!-- Hero Section -->
+<section class="hero-section flex items-center justify-center parallax">
+    <div class="container mx-auto text-center px-4">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white animate__animated animate__fadeInDown">My Orders</h1>
+        <p class="text-lg md:text-xl text-white animate__animated animate__fadeInUp animate__delay-1s">View and manage your purchase history</p>
+    </div>
+</section>
+
+<!-- Orders Content -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center mb-8" data-aos="fade-up">
+            <h2 class="text-3xl font-bold">My Orders</h2>
+            <a href="{{ route('products.index') }}" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition transform hover:scale-105">
+                <i class="fas fa-shopping-basket mr-2"></i> Continue Shopping
+            </a>
         </div>
-    @endif
-    
-    @if($orders->isEmpty())
-        <div class="card shadow-sm">
-            <div class="card-body text-center py-5">
-                <i class="fas fa-shopping-bag fa-4x text-muted mb-3"></i>
-                <h3>No orders yet</h3>
-                <p class="text-muted">You haven't placed any orders yet</p>
-                <a href="{{ route('products.index') }}" class="btn btn-danger">
-                    <i class="fas fa-shopping-basket me-2"></i>Start Shopping
+
+        @if(session('success'))
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg" data-aos="fade-up" data-aos-delay="100">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg" data-aos="fade-up" data-aos-delay="100">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if($orders->isEmpty())
+            <div class="empty-card bg-white rounded-xl shadow-md text-center py-16" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-shopping-bag text-6xl text-gray-400 mb-4"></i>
+                <h3 class="text-2xl font-semibold mb-4">No orders yet</h3>
+                <p class="text-gray-600 mb-6">You haven't placed any orders yet.</p>
+                <a href="{{ route('products.index') }}" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg transition transform hover:scale-105">
+                    <i class="fas fa-shopping-basket mr-2"></i> Start Shopping
                 </a>
             </div>
-        </div>
-    @else
-        <div class="card shadow-sm">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Order #</th>
-                            <th>Date</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Payment</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($orders as $order)
+        @else
+            <div class="order-card bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-100">
                             <tr>
-                                <td><a href="{{ route('orders.show', $order->id) }}" class="text-decoration-none">#{{ $order->id }}</a></td>
-                                <td>{{ $order->created_at->format('M d, Y') }}</td>
-                                <td>{{ $order->orderItems->sum('quantity') }} items</td>
-                                <td>UGX {{ number_format($order->total_amount) }}</td>
-                                <td>
-                                    @php
-                                        $statusColors = [
-                                            'pending' => 'warning',
-                                            'processing' => 'info',
-                                            'completed' => 'success',
-                                            'cancelled' => 'danger'
-                                        ];
-                                        $statusColor = $statusColors[$order->status] ?? 'secondary';
-                                    @endphp
-                                    <span class="badge bg-{{ $statusColor }}">{{ ucfirst($order->status) }}</span>
-                                </td>
-                                <td>
-                                    @php
-                                        $paymentStatusColors = [
-                                            'pending' => 'warning',
-                                            'paid' => 'success',
-                                            'failed' => 'danger'
-                                        ];
-                                        $paymentStatusColor = $paymentStatusColors[$order->payment_status] ?? 'secondary';
-                                    @endphp
-                                    <span class="badge bg-{{ $paymentStatusColor }}">{{ ucfirst($order->payment_status) }}</span>
-                                </td>
-                                <td>
-                                    <a href="{{ route('orders.show', $order->id) }}" class="btn btn-sm btn-outline-dark">
-                                        View Details
-                                    </a>
-                                </td>
+                                <th class="py-3 px-6">Order #</th>
+                                <th class="py-3 px-6">Date</th>
+                                <th class="py-3 px-6">Items</th>
+                                <th class="py-3 px-6">Total</th>
+                                <th class="py-3 px-6">Status</th>
+                                <th class="py-3 px-6">Payment</th>
+                                <th class="py-3 px-6"></th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach($orders as $order)
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="py-4 px-6">
+                                        <a href="{{ route('orders.show', $order->id) }}" class="text-red-600 hover:underline">#{{ $order->id }}</a>
+                                    </td>
+                                    <td class="py-4 px-6">{{ $order->created_at->format('M d, Y') }}</td>
+                                    <td class="py-4 px-6">{{ $order->orderItems->sum('quantity') }} items</td>
+                                    <td class="py-4 px-6">UGX {{ number_format($order->total_amount) }}</td>
+                                    <td class="py-4 px-6">
+                                        @php
+                                            $statusColors = [
+                                                'pending' => 'yellow-500',
+                                                'processing' => 'blue-500',
+                                                'completed' => 'green-500',
+                                                'cancelled' => 'red-500'
+                                            ];
+                                            $statusColor = $statusColors[$order->status] ?? 'gray-500';
+                                        @endphp
+                                        <span class="badge bg-{{ $statusColor }} text-white">{{ ucfirst($order->status) }}</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        @php
+                                            $paymentStatusColors = [
+                                                'pending' => 'yellow-500',
+                                                'paid' => 'green-500',
+                                                'failed' => 'red-500'
+                                            ];
+                                            $paymentStatusColor = $paymentStatusColors[$order->payment_status] ?? 'gray-500';
+                                        @endphp
+                                        <span class="badge bg-{{ $paymentStatusColor }} text-white">{{ ucfirst($order->payment_status) }}</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <a href="{{ route('orders.show', $order->id) }}" class="bg-white border border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold py-1 px-3 rounded-lg transition transform hover:scale-105">
+                                            View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        
-        <div class="mt-4">
-            {{ $orders->links() }}
-        </div>
-    @endif
-</div>
+
+            <div class="flex justify-center mt-8" data-aos="fade-up" data-aos-delay="300">
+                {{ $orders->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
+    </div>
+</section>
+@include('partials.footer')
+@endsection
+
+@section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    });
+</script>
 @endsection

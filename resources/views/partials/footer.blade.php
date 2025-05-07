@@ -12,7 +12,7 @@
                     <a href="#"><i class="fab fa-whatsapp"></i></a>                 
                 </div>             
             </div>             
-            <div class="col-md-4 mb-4 mb-md-0">                 
+            <div class="col-md-3 mb-4 mb-md-0">                 
                 <h5 class="text-white mb-3">Quick Links</h5>                 
                 <ul class="list-unstyled footer-links">                     
                     <li><a href="{{ route('home.index') }}">Home</a></li>                     
@@ -21,8 +21,16 @@
                     <li><a href="{{ route('about') }}">About Us</a></li>                     
                     <li><a href="{{ route('contact') }}">Contact Us</a></li>                 
                 </ul>             
+            </div>
+            <div class="col-md-3 mb-4 mb-md-0">                 
+                <h5 class="text-white mb-3">Legal Policies</h5>                 
+                <ul class="list-unstyled footer-links">                     
+                    <li><a href="{{ route('terms') }}">Terms and Conditions</a></li>                     
+                    <li><a href="{{ route('privacy') }}">Privacy policies</a></li>                     
+                    <li><a href="{{ route('refund') }}">Refund Policies</a></li>                                      
+                </ul>             
             </div>             
-            <div class="col-md-4">                 
+            <div class="col-md-3">                 
                 <h5 class="text-white mb-3">Contact Info</h5>                 
                 <ul class="list-unstyled contact-info">                     
                     <li><i class="fas fa-map-marker-alt text-danger me-2"></i> Main Street, Kasese Town, Uganda</li>                     
@@ -32,12 +40,12 @@
                 </ul>             
             </div>         
         </div>         
-        <hr class="mt-4 mb-4" style="border-color: rgba(255,255,255,0.1);">         
+        <hr class="mt-2 mb-2" style="border-color: rgba(255,255,255,0.1);">         
         <div class="row">             
-            <div class="col-md-6 text-center text-md-start">                 
+            <div class="col-md-3 text-center text-md-start">                 
                 <p class="mb-0">&copy; {{ date('Y') }} Mukora Supermarket. All rights reserved.</p>             
             </div>             
-            <div class="col-md-6 text-center text-md-end">                 
+            <div class="col-md-3 text-center text-md-end">                 
                 <p class="mb-0">Designed with <i class="fas fa-heart text-danger"></i> in Kasese</p>             
             </div>         
         </div>     

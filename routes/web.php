@@ -60,6 +60,18 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
+Route::get('/terms', function () {
+    return view('terms');
+})->name('terms');
+
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
+
+Route::get('/refund', function () {
+    return view('refund');
+})->name('refund');
+
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
