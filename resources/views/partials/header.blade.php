@@ -55,8 +55,8 @@
             <i class="fas fa-chevron-down ml-1 text-sm"></i>
           </button>
           <ul id="helpMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Customer Service</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">FAQs</a></li>
+            <li><a href="{{ route('customer-service.index') }}" class="block px-4 py-2 hover:bg-gray-100">Customer Service</a></li>
+            <li><a href="{{ route('faqs') }}" class="block px-4 py-2 hover:bg-gray-100">FAQs</a></li>
             <li><a href="{{ route('contact') }}" class="block px-4 py-2 hover:bg-gray-100">Contact Us</a></li>
           </ul>
         </div>

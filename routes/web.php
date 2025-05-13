@@ -13,8 +13,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ContactInquiryController as AdminContactInquiryController;
 use App\Http\Controllers\Admin\ReportController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomerServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +57,13 @@ Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->
 Route::get('/promotions', function () {
     return view('promotions');
 })->name('promotions');
+
+Route::get('/faqs', function () {
+    return view('faqs');
+})->name('faqs');
+
+Route::get('/customer-service', [CustomerServiceController::class, 'index'])->name('customer-service.index');
+Route::post('/customer-service', [CustomerServiceController::class, 'store'])->name('customer-service.store');
 
 Route::get('/about', function () {
     return view('about');
@@ -130,10 +139,16 @@ Route::prefix('admin')
         Route::resource('products', AdminProductController::class)->except(['show']);
         Route::resource('categories', AdminCategoryController::class)->except(['show']);
         Route::resource('orders', AdminOrderController::class);
+        Route::get('contact-inquiries', [AdminContactInquiryController::class, 'index'])->name('contact-inquiries.index');
+        Route::get('contact-inquiries/{contactInquiry}', [AdminContactInquiryController::class, 'show'])->name('contact-inquiries.show');
+        Route::post('contact-inquiries/{contactInquiry}/reply', [AdminContactInquiryController::class, 'reply'])->name('contact-inquiries.reply');
         
         // Admin Reports
         Route::post('reports/export', [ReportController::class, 'export'])->name('reports.export');
     });
+
+// Momo Callback Route
+Route::post('/api/momo/callback', [CheckoutController::class, 'momoCallback'])->name('momo.callback');
 
 // Authentication Routes (from Laravel's auth.php)
 require __DIR__.'/auth.php';

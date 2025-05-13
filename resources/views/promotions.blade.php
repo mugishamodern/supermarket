@@ -131,7 +131,7 @@
             <p class="text-gray-600 max-w-2xl mx-auto">Stay tuned for more exciting offers coming your way!</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="relative rounded-xl overflow-hidden shadow-lg h-72" data-aos="fade-right" style="background: url('{{ asset('images/promotions/upcoming1.jpg') }}') no-repeat center center; background-size: cover;">
+            <div class="relative rounded-xl overflow-hidden shadow-lg h-72" data-aos="fade-right" style="background:  no-repeat center center; background-size: cover;">
                 <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent">
                     <div class="flex flex-col justify-center h-full p-8 text-white">
                         <h3 class="text-2xl font-bold mb-2">Mid-Month Madness</h3>
@@ -140,7 +140,7 @@
                     </div>
                 </div>
             </div>
-            <div class="relative rounded-xl overflow-hidden shadow-lg h-72" data-aos="fade-left" style="background: url('{{ asset('images/promotions/upcoming2.jpg') }}') no-repeat center center; background-size: cover;">
+            <div class="relative rounded-xl overflow-hidden shadow-lg h-72" data-aos="fade-left" style="background:  no-repeat center center; background-size: cover;">
                 <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent">
                     <div class="flex flex-col justify-center h-full p-8 text-white">
                         <h3 class="text-2xl font-bold mb-2">Seasonal Specials</h3>

@@ -17,7 +17,6 @@
         transition: all 0.3s ease;
     }
     .cart-card:hover, .summary-card:hover, .promo-card:hover, .info-card:hover {
-       演奏: translateY(-8px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
     .fade-in {

@@ -56,7 +56,7 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="flex justify-center" data-aos="fade-right">
-                <img src="{{ asset('images/about-story.jpg') }}" alt="Our Store" class="rounded-xl shadow-lg object-cover w-full h-96">
+                <img src="{{ asset('/uploads/images/store.png') }}" alt="Our Store" class="rounded-xl shadow-lg object-cover w-full h-96">
             </div>
             <div class="flex flex-col justify-center" data-aos="fade-left">
                 <h3 class="text-2xl font-semibold mb-4">A Commitment to Community</h3>
@@ -116,10 +116,10 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             @foreach([
-                ['name' => 'John Mukora', 'role' => 'Founder & CEO', 'image' => 'images/team/john.jpg'],
-                ['name' => 'Sarah Kisa', 'role' => 'Store Manager', 'image' => 'images/team/sarah.jpg'],
-                ['name' => 'Michael Bwambale', 'role' => 'Operations Lead', 'image' => 'images/team/michael.jpg'],
-                ['name' => 'Esther Ninsiima', 'role' => 'Customer Service Head', 'image' => 'images/team/esther.jpg']
+                ['name' => 'Mr Mukora', 'role' => 'Founder & CEO', 'image' => '/uploads/images/john.jpg'],
+                ['name' => 'Mukora Collins', 'role' => 'Store Manager', 'image' => '/uploads/images/john.jpg'],
+                ['name' => 'Mukora Canary', 'role' => 'Operations Lead', 'image' => '/uploads/images/john.jpg'],
+                ['name' => 'Mukora Clinton', 'role' => 'Customer Service Head', 'image' => '/uploads/images/john.jpg']
             ] as $member)
             <div class="bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                 <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" class="w-full h-64 object-cover">

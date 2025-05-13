@@ -168,7 +168,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap font-medium">{{ $product->name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                        {{ $product->stock }}
+                                        {{ $product->stock_quantity}}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap font-medium">${{ number_format($product->price, 2) }}</td>
@@ -241,7 +241,7 @@
 
         <h3 class="text-lg font-semibold text-gray-700 mb-8">FeedBack Handling</h3>
         <div class="grid grid-cols-2 md:grid-cols-2 gap-2 ">
-            <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group">
+            <a href="{{ route('admin.contact-inquiries.index', ['status' => 'pending']) }}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group">
                 <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 text-yellow-600 mb-4 group-hover:bg-yellow-200 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 3.866-3.582 7-8 7a8.44 8.44 0 01-4-.93L3 20l1.34-3.58A7.96 7.96 0 013 12c0-3.866 3.582-7 8-7s8 3.134 8 7z" />
