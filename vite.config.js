@@ -19,6 +19,15 @@ export default defineConfig({
                 manualChunks: {
                     vendor: ['bootstrap'],
                 },
+                assetFileNames: (assetInfo) => {
+                    let extType = assetInfo.name.split('.').at(1);
+                    if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+                        extType = 'img';
+                    }
+                    return `assets/${extType}/[name]-[hash][extname]`;
+                },
+                chunkFileNames: 'assets/js/[name]-[hash].js',
+                entryFileNames: 'assets/js/[name]-[hash].js',
             },
         },
     },
@@ -28,7 +37,8 @@ export default defineConfig({
     resolve: {
         alias: {
             '$': 'jquery',
-            'jquery': 'jquery'
+            'jquery': 'jquery',
+            '@': '/resources',
         }
     },
     publicDir: false,
