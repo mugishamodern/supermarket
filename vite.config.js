@@ -12,6 +12,7 @@ export default defineConfig({
         // Optimize build
         minify: 'terser',
         manifest: true,
+        outDir: 'public/build',
         rollupOptions: {
             external: ['jquery'],
             output: {
@@ -30,6 +31,6 @@ export default defineConfig({
             'jquery': 'jquery'
         }
     },
-    publicDir: 'public',
+    publicDir: false,
     base: '/'
 });
