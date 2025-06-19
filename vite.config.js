@@ -8,4 +8,19 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        // Optimize build
+        minify: 'terser',
+        manifest: true,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['jquery', 'bootstrap'],
+                },
+            },
+        },
+    },
+    optimizeDeps: {
+        include: ['jquery', 'bootstrap'],
+    },
 });
