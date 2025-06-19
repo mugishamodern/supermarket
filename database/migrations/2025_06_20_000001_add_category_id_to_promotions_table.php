@@ -8,16 +8,20 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('promotions', function (Blueprint $table) {
-            $table->foreignId('category_id')->nullable()->after('priority')->constrained()->onDelete('set null');
-        });
+        if (!Schema::hasColumn('promotions', 'category_id')) {
+            Schema::table('promotions', function (Blueprint $table) {
+                $table->foreignId('category_id')->nullable()->after('priority')->constrained()->onDelete('set null');
+            });
+        }
     }
 
     public function down()
     {
-        Schema::table('promotions', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
-            $table->dropColumn('category_id');
-        });
+        if (Schema::hasColumn('promotions', 'category_id')) {
+            Schema::table('promotions', function (Blueprint $table) {
+                $table->dropForeign(['category_id']);
+                $table->dropColumn('category_id');
+            });
+        }
     }
 }; 
