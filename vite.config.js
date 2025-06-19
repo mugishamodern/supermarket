@@ -13,14 +13,23 @@ export default defineConfig({
         minify: 'terser',
         manifest: true,
         rollupOptions: {
+            external: ['jquery'],
             output: {
                 manualChunks: {
-                    vendor: ['jquery', 'bootstrap'],
+                    vendor: ['bootstrap'],
                 },
             },
         },
     },
     optimizeDeps: {
-        include: ['jquery', 'bootstrap'],
+        include: ['bootstrap'],
     },
+    resolve: {
+        alias: {
+            '$': 'jquery',
+            'jquery': 'jquery'
+        }
+    },
+    publicDir: 'public',
+    base: '/'
 });

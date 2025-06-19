@@ -24,13 +24,5 @@ export default {
     future: {
         removeDeprecatedGapUtilities: true,
         purgeLayersByDefault: true,
-    },
-
-    purge: {
-        enabled: true,
-        content: [
-            './storage/framework/views/*.php',
-            './resources/views/**/*.blade.php',
-        ],
-    },
+    }
 };
