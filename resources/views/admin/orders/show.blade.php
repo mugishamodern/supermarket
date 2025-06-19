@@ -1,17 +1,34 @@
 <!-- resources/views/admin/orders/show.blade.php -->
 @extends('layouts.admin')
 
-@section('header')
-    Order #{{ $order->id }} Details
-@endsection
+@section('title', 'Order #{{ $order->id }} - Admin')
 
 @section('content')
     <div class="mb-6">
         <div class="flex justify-between items-center">
-            <h3 class="text-lg font-medium text-gray-900">Order Information</h3>
-            <a href="{{ route('admin.orders.index') }}" class="text-indigo-600 hover:text-indigo-900">Back to Orders</a>
+            <h3 class="text-lg font-medium text-gray-900">Order #{{ $order->id }} Details</h3>
+            <div class="flex space-x-3">
+                <a href="{{ route('admin.orders.edit', $order->id) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                    Edit Order
+                </a>
+                <a href="{{ route('admin.orders.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                    Back to Orders
+                </a>
+            </div>
         </div>
     </div>
+
+    @if (session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
         <div class="px-4 py-5 sm:px-6 flex justify-between">
@@ -24,16 +41,7 @@
                 </p>
             </div>
             <div>
-                @php
-                    $statusClasses = [
-                        'pending' => 'bg-yellow-100 text-yellow-800',
-                        'processing' => 'bg-blue-100 text-blue-800',
-                        'completed' => 'bg-green-100 text-green-800',
-                        'cancelled' => 'bg-red-100 text-red-800',
-                    ];
-                    $statusClass = $statusClasses[$order->status] ?? 'bg-gray-100 text-gray-800';
-                @endphp
-                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $statusClass }}">
+                <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full {{ $order->status_badge_class }}">
                     {{ ucfirst($order->status) }}
                 </span>
             </div>
@@ -69,30 +77,85 @@
                         Payment Method
                     </dt>
                     <dd class="mt-1 text-sm text-gray-900">
-                        {{ $order->payment_method ?? 'Not specified' }}
+                        {{ $order->payment_method_name }}
+                    </dd>
+                </div>
+                <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Payment Status
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $order->payment_status_badge_class }}">
+                            {{ ucfirst($order->payment_status) }}
+                        </span>
+                    </dd>
+                </div>
+                <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Last Updated
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                        {{ $order->updated_at->format('F j, Y \a\t g:i A') }}
                     </dd>
                 </div>
             </dl>
         </div>
     </div>
 
-    <!-- Shipping Address -->
+    <!-- Customer Address -->
     <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
         <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">
-                Shipping Address
+                Delivery Address
             </h3>
         </div>
         <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
-            <address class="text-sm text-gray-900 not-italic">
-                {{ $order->shipping_address->full_name ?? $order->user->name }}<br>
-                {{ $order->shipping_address->address_line1 ?? 'No address line 1' }}<br>
-                @if(isset($order->shipping_address->address_line2) && $order->shipping_address->address_line2)
-                    {{ $order->shipping_address->address_line2 }}<br>
-                @endif
-                {{ $order->shipping_address->city ?? 'No city' }}, {{ $order->shipping_address->state ?? 'No state' }} {{ $order->shipping_address->postal_code ?? 'No postal code' }}<br>
-                {{ $order->shipping_address->country ?? 'No country' }}
-            </address>
+            @if($order->address)
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Street Address
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {{ $order->address->street_address }}
+                        </dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">
+                            City
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {{ $order->address->city }}
+                        </dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">
+                            State/Province
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {{ $order->address->state }}
+                        </dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Postal Code
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {{ $order->address->postal_code }}
+                        </dd>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Phone Number
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            {{ $order->address->phone_number }}
+                        </dd>
+                    </div>
+                </dl>
+            @else
+                <p class="text-sm text-gray-500">No address information available.</p>
+            @endif
         </div>
     </div>
 
@@ -104,104 +167,91 @@
             </h3>
         </div>
         <div class="border-t border-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Product
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Price
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Quantity
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Subtotal
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($order->items as $item)
-                        <tr class="{{ $loop->odd ? 'bg-white' : 'bg-gray-50' }}">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    @if($item->product && $item->product->image)
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded object-cover" src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product_name }}">
-                                        </div>
-                                    @endif
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ $item->product_name }}
-                                        </div>
-                                        @if($item->product)
-                                            <div class="text-sm text-gray-500">
-                                                SKU: {{ $item->product->sku ?? 'N/A' }}
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                UGX {{ number_format($item->price, 2) }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $item->quantity }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                UGX {{ number_format($item->price * $item->quantity, 2) }}
-                            </td>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Product
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Price
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Quantity
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Total
+                            </th>
                         </tr>
-                    @endforeach
-                </tbody>
-                <tfoot class="bg-gray-50">
-                    <tr>
-                        <th colspan="3" class="px-6 py-3 text-right text-sm font-medium text-gray-500">
-                            Subtotal
-                        </th>
-                        <td class="px-6 py-3 text-sm text-gray-900">
-                            UGX {{ number_format($order->subtotal ?? $order->total_amount, 2) }}
-                        </td>
-                    </tr>
-                    @if(isset($order->shipping_cost) && $order->shipping_cost > 0)
-                    <tr>
-                        <th colspan="3" class="px-6 py-3 text-right text-sm font-medium text-gray-500">
-                            Shipping
-                        </th>
-                        <td class="px-6 py-3 text-sm text-gray-900">
-                            UGX {{ number_format($order->shipping_cost, 2) }}
-                        </td>
-                    </tr>
-                    @endif
-                    @if(isset($order->tax) && $order->tax > 0)
-                    <tr>
-                        <th colspan="3" class="px-6 py-3 text-right text-sm font-medium text-gray-500">
-                            Tax
-                        </th>
-                        <td class="px-6 py-3 text-sm text-gray-900">
-                            UGX {{ number_format($order->tax, 2) }}
-                        </td>
-                    </tr>
-                    @endif
-                    <tr>
-                        <th colspan="3" class="px-6 py-3 text-right text-sm font-medium text-gray-900">
-                            Total
-                        </th>
-                        <td class="px-6 py-3 text-sm font-medium text-gray-900">
-                            UGX {{ number_format($order->total_amount, 2) }}
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($order->items as $item)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-lg object-cover" 
+                                                 src="{{ $item->product->image ?? '/images/product-placeholder.jpg' }}" 
+                                                 alt="{{ $item->product->name }}">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ $item->product->name }}
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                {{ $item->product->category->name ?? 'Uncategorized' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    UGX {{ number_format($item->price, 2) }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $item->quantity }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    UGX {{ number_format($item->price * $item->quantity, 2) }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- Order Status Update -->
-    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+    <!-- Order Notes -->
+    @if($order->notes || $order->admin_notes)
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Order Notes
+                </h3>
+            </div>
+            <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+                @if($order->notes)
+                    <div class="mb-4">
+                        <dt class="text-sm font-medium text-gray-500">Customer Notes</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ $order->notes }}</dd>
+                    </div>
+                @endif
+                @if($order->admin_notes)
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Admin Notes</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ $order->admin_notes }}</dd>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
+
+    <!-- Quick Status Update -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
         <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">
-                Update Order Status
+                Quick Status Update
             </h3>
         </div>
         <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
@@ -219,12 +269,20 @@
                         </select>
                     </div>
                     <div class="col-span-1 md:col-span-3">
-                        <label for="notes" class="block text-sm font-medium text-gray-700">Admin Notes</label>
-                        <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ $order->admin_notes ?? '' }}</textarea>
+                        <label for="payment_status" class="block text-sm font-medium text-gray-700">Payment Status</label>
+                        <select id="payment_status" name="payment_status" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="pending" {{ $order->payment_status == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="paid" {{ $order->payment_status == 'paid' ? 'selected' : '' }}>Paid</option>
+                            <option value="failed" {{ $order->payment_status == 'failed' ? 'selected' : '' }}>Failed</option>
+                        </select>
+                    </div>
+                    <div class="col-span-1 md:col-span-6">
+                        <label for="admin_notes" class="block text-sm font-medium text-gray-700">Admin Notes</label>
+                        <textarea id="admin_notes" name="admin_notes" rows="3" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ $order->admin_notes ?? '' }}</textarea>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <div class="mt-6">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition">
                         Update Order
                     </button>
                 </div>

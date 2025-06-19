@@ -6,34 +6,6 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-<style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/uploads/images/supermarket-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 60vh;
-    }
-    .contact-card {
-        transition: all 0.3s ease;
-    }
-    .contact-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    .fade-in {
-        animation: fadeIn 0.8s ease-in forwards;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .parallax {
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-</style>
 @endsection
 
 @include('partials.header')
@@ -43,7 +15,7 @@
 <section class="hero-section flex items-center justify-center parallax">
     <div class="container mx-auto text-center px-4">
         <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white animate__animated animate__fadeInDown">Contact Us</h1>
-        <p class="text-lg md:text-xl text-white animate__animated animate__fadeInUp animate__delay-1s">We’re here to assist you with all your shopping needs!</p>
+        <p class="text-lg md:text-xl text-white animate__animated animate__fadeInUp animate__delay-1s">We're here to assist you with all your shopping needs!</p>
     </div>
 </section>
 

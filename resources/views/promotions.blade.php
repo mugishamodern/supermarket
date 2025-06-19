@@ -6,56 +6,17 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-<style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/Uploads/images/promotions-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 60vh;
-    }
-    .promo-card {
-        transition: all 0.3s ease;
-    }
-    .promo-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    .pulse-button {
-        animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
-        70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
-    }
-    .fade-in {
-        animation: fadeIn 0.8s ease-in forwards;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .parallax {
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    .countdown-timer div {
-        min-width: 2.5rem;
-    }
-</style>
 @endsection
 
 @include('partials.header')
 
 @section('content')
 <!-- Hero Section -->
-<section class="hero-section flex items-center justify-center parallax">
+<section class="hero-section flex items-center justify-center parallax bg-cover bg-center min-h-[60vh]" style="background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url('/Uploads/images/promotions-bg.jpg');">
     <div class="container mx-auto text-center px-4">
         <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white animate__animated animate__fadeInDown">Special Promotions</h1>
         <p class="text-lg md:text-xl text-white animate__animated animate__fadeInUp animate__delay-1s">Discover exclusive deals and save big at Mukora Supermarket!</p>
-        <a href="#promotions" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full inline-block mt-6 transition transform hover:scale-105 pulse-button animate__animated animate__fadeInUp animate__delay-2s">
+        <a href="#promotions" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full inline-block mt-6 transition transform hover:scale-105 animate__animated animate__fadeInUp animate__delay-2s pulse-button">
             View Offers
         </a>
     </div>
@@ -93,7 +54,7 @@
                     'slug' => 'school-bundle'
                 ]
             ] as $promo)
-            <div class="promo-card bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+            <div class="promo-card bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-lg" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                 <div class="relative">
                     <img src="{{ asset($promo['image']) }}" alt="{{ $promo['title'] }}" class="w-full h-48 object-cover">
                     <div class="absolute top-4 left-4">
@@ -112,7 +73,7 @@
                             <div class="bg-red-100 text-red-600 rounded px-2 py-1 text-xs font-bold" data-seconds>00</div>
                         </div>
                     </div>
-                    <a href="{{#}}" class="block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg text-center transition transform hover:scale-105">
+                    <a href="{{ route('products.index') }}" class="block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg text-center transition transform hover:scale-105">
                         Shop Now
                     </a>
                 </div>
@@ -131,7 +92,7 @@
             <p class="text-gray-600 max-w-2xl mx-auto">Stay tuned for more exciting offers coming your way!</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="relative rounded-xl overflow-hidden shadow-lg h-72" data-aos="fade-right" style="background:  no-repeat center center; background-size: cover;">
+            <div class="relative rounded-xl overflow-hidden shadow-lg h-72 bg-cover bg-center" data-aos="fade-right">
                 <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent">
                     <div class="flex flex-col justify-center h-full p-8 text-white">
                         <h3 class="text-2xl font-bold mb-2">Mid-Month Madness</h3>
@@ -140,7 +101,7 @@
                     </div>
                 </div>
             </div>
-            <div class="relative rounded-xl overflow-hidden shadow-lg h-72" data-aos="fade-left" style="background:  no-repeat center center; background-size: cover;">
+            <div class="relative rounded-xl overflow-hidden shadow-lg h-72 bg-cover bg-center" data-aos="fade-left">
                 <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent">
                     <div class="flex flex-col justify-center h-full p-8 text-white">
                         <h3 class="text-2xl font-bold mb-2">Seasonal Specials</h3>
@@ -168,8 +129,8 @@
         </div>
     </div>
     <div class="absolute inset-0 z-0 overflow-hidden">
-        <div class="absolute w-32 h-32 bg-red-600 rounded-full top-1/4 left-1/4 animate-pulse" style="opacity: 0.3;"></div>
-        <div class="absolute w-40 h-40 bg-red-700 rounded-full top-3/4 left-1/3 animate-pulse" style="animation-delay: 1s; opacity: 0.2;"></div>
+        <div class="absolute w-32 h-32 bg-red-600 rounded-full top-1/4 left-1/4 animate-pulse opacity-30"></div>
+        <div class="absolute w-40 h-40 bg-red-700 rounded-full top-3/4 left-1/3 animate-pulse opacity-20 delay-1000"></div>
     </div>
 </section>
 @endsection
@@ -199,7 +160,10 @@
 
                 if (distance < 0) {
                     clearInterval(countdown);
-                    timer.innerHTML = '<span class="text-xs text-red-600">Expired</span>';
+                    daysEl.textContent = '00';
+                    hoursEl.textContent = '00';
+                    minutesEl.textContent = '00';
+                    secondsEl.textContent = '00';
                     return;
                 }
 

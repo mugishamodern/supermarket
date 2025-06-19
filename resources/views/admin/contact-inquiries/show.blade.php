@@ -49,9 +49,15 @@
                     </div>
                     @if ($contactInquiry->replied_at)
                         <div class="mb-4">
-                            <h6 class="text-sm font-medium text-gray-500 uppercase">Replied At</h6>
-                            <p class="text-sm text-gray-900">{{ $contactInquiry->replied_at->format('M d, Y H:i') }}</p>
-                        </div>
+    <h6 class="text-sm font-medium text-gray-500 uppercase">Replied At</h6>
+    @if ($contactInquiry->replied_at instanceof \Illuminate\Support\Carbon)
+        <p class="text-sm text-gray-900">{{ $contactInquiry->replied_at->format('M d, Y H:i') }}</p>
+    @elseif ($contactInquiry->replied_at)
+        <p class="text-sm text-gray-900">{{ $contactInquiry->replied_at }}</p>
+    @else
+        <p class="text-sm text-gray-500">Not yet replied</p>
+    @endif
+</div>
                     @endif
                     <div>
                         <h6 class="text-sm font-medium text-gray-500 uppercase">Message</h6>

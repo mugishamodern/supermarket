@@ -73,9 +73,9 @@
                     </svg>
                 </span>
             </div>
-            <p class="text-3xl font-bold text-gray-800">{{ $totalOrders }}</p>
+            <p class="text-3xl font-bold text-gray-800">{{ $totalUsers }}</p>
             <div class="flex items-center mt-2">
-                <span class="text-yellow-500 font-medium">{{ $pendingOrders }}</span>
+                <span class="text-yellow-500 font-medium">{{ $activeUsers }}</span>
                 <span class="text-gray-500 text-sm ml-1">active clients</span>
             </div>
         </div>
@@ -220,6 +220,25 @@
                 <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Add New Category</p>
             </a>
 
+            <a href="{{ route('admin.promotions.index') }}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group">
+                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-pink-100 text-pink-600 mb-4 group-hover:bg-pink-200 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m4 0h-1v-4h-1m4 0h-1v-4h-1" />
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Manage Promotions</p>
+            </a>
+
+            <!-- Export Reports Quick Action -->
+            <button id="export-report" type="button" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group focus:outline-none">
+                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600 mb-4 group-hover:bg-green-200 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Export Reports</p>
+            </button>
+
             <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group">
                 <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 text-yellow-600 mb-4 group-hover:bg-yellow-200 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -227,15 +246,6 @@
                     </svg>
                 </div>
                 <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Pending Orders</p>
-            </a>
-
-            <a href="{{ route('admin.reports.export') }}" id="export-report" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group">
-                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600 mb-4 group-hover:bg-green-200 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                </div>
-                <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Export Sales Report</p>
             </a>
         </div>
 

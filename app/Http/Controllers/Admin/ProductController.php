@@ -45,7 +45,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'stock_quantity' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'featured' => 'nullable|boolean',
         ]);
     
@@ -58,11 +58,17 @@ class ProductController extends Controller
         $product->stock_quantity = $validated['stock_quantity'];
         $product->is_featured = $request->has('featured');
     
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $product->image = $path;
+        // Handle multiple image uploads
+        $images = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('products', 'public');
+                $images[] = $path;
+            }
         }
+        $product->images = $images;
+        // For backward compatibility, set the first image as the main image
+        $product->image = $images[0] ?? null;
     
         $product->save();
     
@@ -105,7 +111,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_featured' => 'nullable|boolean',
         ]);
     
@@ -115,18 +121,20 @@ class ProductController extends Controller
         $product->description = $validated['description'];
         $product->price = $validated['price'];
         $product->category_id = $validated['category_id'];
-        $product->stock_quantity = $validated['stock']; // Notice: stock_quantity not stock
+        $product->stock_quantity = $validated['stock'];
         $product->is_featured = $request->has('featured');
     
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+        // Handle multiple image uploads (append to existing)
+        $images = $product->images ?? [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('products', 'public');
+                $images[] = $path;
             }
-            $path = $request->file('image')->store('products', 'public');
-            $product->image = $path;
         }
+        $product->images = $images;
+        // For backward compatibility, set the first image as the main image
+        $product->image = $images[0] ?? null;
     
         $product->save();
     

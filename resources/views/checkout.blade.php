@@ -6,46 +6,31 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-<style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/uploads/images/supermarket-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 60vh;
-    }
-    .checkout-card, .summary-card {
-        transition: all 0.3s ease;
-    }
-    .checkout-card:hover, .summary-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    .fade-in {
-        animation: fadeIn 0.8s ease-in forwards;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .parallax {
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    .form-check-input:checked {
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
-    .form-check-label:hover {
-        cursor: pointer;
-    }
-</style>
 @endsection
 
 @include('partials.header')
 
 @section('content')
+<!-- Show session messages -->
+@if(session('error'))
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline">{{ session('error') }}</span>
+    </div>
+@endif
+@if(session('success'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+@endif
+@if($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        <ul class="list-disc pl-5">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <!-- Hero Section -->
 <section class="hero-section flex items-center justify-center parallax">
     <div class="container mx-auto text-center px-4">
@@ -66,7 +51,10 @@
                     <!-- Delivery Address -->
                     <div class="checkout-card bg-white rounded-xl shadow-md mb-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="p-6 border-b">
-                            <h5 class="text-xl font-semibold">1. Delivery Address</h5>
+                            <div class="flex justify-between items-center mb-2">
+                                <h5 class="text-xl font-semibold">1. Delivery Address</h5>
+                                <a href="{{ route('user.profile') }}" class="text-blue-600 hover:underline text-sm">Edit Addresses</a>
+                            </div>
                         </div>
                         <div class="p-6">
                             @if(count($addresses) > 0)
@@ -170,38 +158,46 @@
                             <h5 class="text-xl font-semibold">2. Payment Method</h5>
                         </div>
                         <div class="p-6 space-y-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" 
-                                       id="cashOnDelivery" value="cash_on_delivery" checked>
-                                <label class="form-check-label flex items-center" for="cashOnDelivery">
-                                    <i class="fas fa-money-bill-wave fa-2x text-green-600 mr-3"></i>
-                                    <div>
-                                        <strong class="text-gray-800">Cash on Delivery</strong>
-                                        <p class="text-gray-600 text-sm mb-0">Pay when your order arrives</p>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" 
-                                       id="mobileMoney" value="mobile_money">
-                                <label class="form-check-label flex items-center" for="mobileMoney">
-                                    <i class="fas fa-mobile-alt fa-2x text-blue-600 mr-3"></i>
-                                    <div>
-                                        <strong class="text-gray-800">Mobile Money</strong>
-                                        <p class="text-gray-600 text-sm mb-0">Pay using MTN Mobile Money or Airtel Money</p>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" 
-                                       id="creditCard" value="credit_card">
-                                <label class="form-check-label flex items-center" for="creditCard">
-                                    <i class="fas fa-credit-card fa-2x text-teal-600 mr-3"></i>
-                                    <div>
-                                        <strong class="text-gray-800">Credit/Debit Card</strong>
-                                        <p class="text-gray-600 text-sm mb-0">Pay securely using your credit or debit card</p>
-                                    </div>
-                                </label>
+                            @foreach($paymentMethods as $method)
+                                <div class="form-check">
+                                    <input class="form-check-input payment-method-radio" type="radio" name="payment_method_id" 
+                                           id="paymentMethod{{ $method->id }}" value="{{ $method->id }}"
+                                           {{ $loop->first ? 'checked' : '' }} data-method-name="{{ strtolower($method->name) }}">
+                                    <label class="form-check-label flex items-center" for="paymentMethod{{ $method->id }}">
+                                        @if($method->name === 'Cash on Delivery')
+                                            <i class="fas fa-money-bill-wave fa-2x text-green-600 mr-3"></i>
+                                        @elseif($method->name === 'Mobile Money')
+                                            <i class="fas fa-mobile-alt fa-2x text-blue-600 mr-3"></i>
+                                        @elseif($method->name === 'Credit/Debit Card')
+                                            <i class="fas fa-credit-card fa-2x text-teal-600 mr-3"></i>
+                                        @else
+                                            <i class="fas fa-wallet fa-2x text-gray-600 mr-3"></i>
+                                        @endif
+                                        <div>
+                                            <strong class="text-gray-800">{{ $method->name }}</strong>
+                                            <p class="text-gray-600 text-sm mb-0">
+                                                @if($method->name === 'Cash on Delivery')
+                                                    Pay when your order arrives
+                                                @elseif($method->name === 'Mobile Money')
+                                                    Pay using MTN Mobile Money or Airtel Money
+                                                @elseif($method->name === 'Credit/Debit Card')
+                                                    Pay securely using your credit or debit card
+                                                @else
+                                                    Use {{ $method->name }} for payment
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                            @endforeach
+                            @error('payment_method_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                            <!-- Mobile Money Phone (hidden by default) -->
+                            <div id="mobile-money-phone-field" class="mt-4" style="display:none;">
+                                <label for="mobile_money_phone" class="block text-sm font-medium text-gray-700">Mobile Money Phone Number</label>
+                                <input type="text" name="mobile_money_phone" id="mobile_money_phone" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600" placeholder="e.g. 0772xxxxxx or 0782xxxxxx">
+                                <small class="text-gray-500">Enter your MTN or Airtel number for mobile money payment.</small>
                             </div>
                         </div>
                     </div>
@@ -234,31 +230,46 @@
                     <div class="p-6">
                         <div class="space-y-3 mb-4">
                             @foreach($cartItems as $item)
-                                <div class="flex justify-between">
-                                    <div>
-                                        <span class="text-gray-800">{{ $item['name'] }}</span>
-                                        <small class="block text-gray-600">{{ $item['quantity'] }} x UGX {{ number_format($item['price']) }}</small>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <img src="{{ asset('uploads/images/products/' . ($item['image'] ?? 'placeholder.png')) }}" alt="{{ $item['name'] }}" class="w-12 h-12 object-cover rounded mr-3">
+                                        <div>
+                                            <span class="text-gray-800">{{ $item['name'] }}</span>
+                                            <small class="block text-gray-600">{{ $item['quantity'] }} x UGX {{ number_format($item['price']) }}</small>
+                                        </div>
                                     </div>
                                     <span class="text-gray-800">UGX {{ number_format($item['total']) }}</span>
                                 </div>
                             @endforeach
                         </div>
+                        <form method="POST" action="#" id="coupon-form" class="mb-4">
+                            @csrf
+                            <label for="coupon_code" class="block text-sm font-medium text-gray-700 mb-1">Coupon Code</label>
+                            <div class="flex">
+                                <input type="text" name="coupon_code" id="coupon_code" class="w-full px-3 py-2 border border-gray-300 rounded-l focus:ring-2 focus:ring-red-600" placeholder="Enter coupon code">
+                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-r">Apply</button>
+                            </div>
+                        </form>
                         <hr class="my-4">
                         <div class="flex justify-between mb-2">
                             <span class="text-gray-600">Subtotal</span>
                             <span class="text-gray-800">UGX {{ number_format($totalAmount) }}</span>
                         </div>
-                        <div class="flex justify-between mb-4">
+                        @php
+                            $deliveryFee = $totalAmount >= 100000 ? 0 : 5000;
+                        @endphp
+                        <div class="flex justify-between mb-2">
                             <span class="text-gray-600">Shipping Fee</span>
-                            <span class="text-gray-800">Free</span>
+                            <span class="text-gray-800">{{ $deliveryFee == 0 ? 'Free' : 'UGX ' . number_format($deliveryFee) }}</span>
                         </div>
                         <div class="flex justify-between mb-4">
                             <strong class="text-gray-800">Total</strong>
-                            <strong class="text-red-600">UGX {{ number_format($totalAmount) }}</strong>
+                            <strong class="text-red-600">UGX {{ number_format($totalAmount + $deliveryFee) }}</strong>
                         </div>
-                        <button type="submit" form="checkout-form" class="block w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition transform hover:scale-105">
+                        <button type="button" id="placeOrderBtn" class="block w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition transform hover:scale-105">
                             Place Order
                         </button>
+                        <div id="loader" class="hidden text-center mt-3"><i class="fas fa-spinner fa-spin text-red-600 text-2xl"></i></div>
                         <div class="text-center mt-3">
                             <small class="text-gray-600">
                                 By placing your order, you agree to our 
@@ -355,6 +366,48 @@
                     icon: 'error',
                     confirmButtonColor: '#dc3545'
                 });
+            }
+        });
+
+        function toggleMobileMoneyField() {
+            const selected = document.querySelector('.payment-method-radio:checked');
+            const field = document.getElementById('mobile-money-phone-field');
+            if (selected && selected.dataset.methodName === 'mobile money') {
+                field.style.display = '';
+            } else {
+                field.style.display = 'none';
+            }
+        }
+        document.querySelectorAll('.payment-method-radio').forEach(function(radio) {
+            radio.addEventListener('change', toggleMobileMoneyField);
+        });
+        toggleMobileMoneyField();
+
+        // Confirmation modal and loader
+        $('#placeOrderBtn').click(function() {
+            Swal.fire({
+                title: 'Confirm Order',
+                text: 'Are you sure you want to place this order?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, place order!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#loader').removeClass('hidden');
+                    $('#checkout-form').submit();
+                }
+            });
+        });
+
+        // Make mobile money phone required if selected
+        $('.payment-method-radio').on('change', function() {
+            const selected = $('.payment-method-radio:checked').data('method-name');
+            if (selected === 'mobile money') {
+                $('#mobile_money_phone').attr('required', true);
+            } else {
+                $('#mobile_money_phone').removeAttr('required');
             }
         });
     });

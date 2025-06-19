@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -17,9 +18,12 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::all();
+        // Cache categories to avoid redundant queries
+        $categories = Cache::remember('categories', 3600, function () {
+            return Category::select('id', 'name', 'slug')->get();
+        });
         
-        $query = Product::query();
+        $query = Product::with('category');
         
         // Filter by category if provided
         if ($request->has('category')) {
@@ -56,8 +60,11 @@ class ProductController extends Controller
         }
         
         $products = $query->paginate(12);
-        
-        return view('products.index', compact('products', 'categories'));
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Products', 'url' => route('products.index')],
+        ];
+        return view('products.index', compact('products', 'categories', 'breadcrumbs'));
     }
 
     /**
@@ -68,13 +75,21 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
-        $relatedProducts = Product::where('category_id', $product->category_id)
+        $product = Product::with('category')->where('slug', $slug)->firstOrFail();
+        
+        // Get related products with eager loading
+        $relatedProducts = Product::with('category')
+            ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->take(4)
             ->get();
             
-        return view('products.show', compact('product', 'relatedProducts'));
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Products', 'url' => route('products.index')],
+            ['name' => $product->name, 'url' => route('products.show', $product->slug)],
+        ];
+        return view('products.show', compact('product', 'relatedProducts', 'breadcrumbs'));
     }
     
     /**
@@ -88,7 +103,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Cache::remember('categories', 3600, function () {
+            return Category::select('id', 'name')->get();
+        });
+        
         return view('admin.products.create', compact('categories'));
     }
 
@@ -126,6 +144,10 @@ class ProductController extends Controller
         
         $product->save();
         
+        // Clear relevant caches
+        Cache::forget('home_data');
+        Cache::forget('categories');
+        
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created successfully!');
     }
@@ -138,7 +160,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $categories = Category::all();
+        $categories = Cache::remember('categories', 3600, function () {
+            return Category::select('id', 'name')->get();
+        });
+        
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
@@ -180,6 +205,10 @@ class ProductController extends Controller
         
         $product->save();
         
+        // Clear relevant caches
+        Cache::forget('home_data');
+        Cache::forget('categories');
+        
         return redirect()->route('admin.products.index')
             ->with('success', 'Product updated successfully!');
     }
@@ -198,6 +227,10 @@ class ProductController extends Controller
         }
         
         $product->delete();
+        
+        // Clear relevant caches
+        Cache::forget('home_data');
+        Cache::forget('categories');
         
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully!');

@@ -20,8 +20,10 @@ class Order extends Model
         'total_amount',
         'status',
         'payment_method',
+        'payment_method_id',
         'payment_status',
         'notes',
+        'admin_notes',
     ];
     
     /**
@@ -50,15 +52,74 @@ class Order extends Model
     }
     
     /**
+     * Get the payment method for the order.
+     */
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+    
+    /**
      * Get the items for the order.
      */
-    public function Items()
+    public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function OrderItems()
+    /**
+     * Get the order items (alias for items).
+     */
+    public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Get the payment method name.
+     */
+    public function getPaymentMethodNameAttribute()
+    {
+        if ($this->paymentMethod) {
+            return $this->paymentMethod->name;
+        }
+        
+        // Fallback to old payment_method field
+        $paymentLabels = [
+            'cash_on_delivery' => 'Cash on Delivery',
+            'mobile_money' => 'Mobile Money',
+            'credit_card' => 'Credit/Debit Card'
+        ];
+        
+        return $paymentLabels[$this->payment_method] ?? $this->payment_method ?? 'Not specified';
+    }
+
+    /**
+     * Get the status badge class.
+     */
+    public function getStatusBadgeClassAttribute()
+    {
+        $statusClasses = [
+            'pending' => 'bg-yellow-100 text-yellow-800',
+            'processing' => 'bg-blue-100 text-blue-800',
+            'completed' => 'bg-green-100 text-green-800',
+            'cancelled' => 'bg-red-100 text-red-800',
+        ];
+        
+        return $statusClasses[$this->status] ?? 'bg-gray-100 text-gray-800';
+    }
+
+    /**
+     * Get the payment status badge class.
+     */
+    public function getPaymentStatusBadgeClassAttribute()
+    {
+        $statusClasses = [
+            'pending' => 'bg-yellow-100 text-yellow-800',
+            'paid' => 'bg-green-100 text-green-800',
+            'failed' => 'bg-red-100 text-red-800',
+        ];
+        
+        return $statusClasses[$this->payment_status] ?? 'bg-gray-100 text-gray-800';
     }
 }

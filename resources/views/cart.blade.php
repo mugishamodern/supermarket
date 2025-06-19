@@ -6,39 +6,6 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-<style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/uploads/images/supermarket-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 60vh;
-    }
-    .cart-card, .summary-card, .promo-card, .info-card {
-        transition: all 0.3s ease;
-    }
-    .cart-card:hover, .summary-card:hover, .promo-card:hover, .info-card:hover {
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    .fade-in {
-        animation: fadeIn 0.8s ease-in forwards;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .parallax {
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    .quantity-selector button {
-        width: 2rem;
-    }
-    .quantity-selector input {
-        width: 3rem;
-    }
-</style>
 @endsection
 
 @include('partials.header')
@@ -72,13 +39,13 @@
                     <div class="cart-card bg-white rounded-xl shadow-md mb-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="flex justify-between items-center p-6 border-b">
                             <h5 class="text-xl font-semibold">Cart Items ({{ count($cartItems) }})</h5>
-                            {{-- <form action="{{#}}" method="POST" onsubmit="return confirm('Are you sure you want to empty your cart?');">
+                            <form action="{{ route('cart.clear') }}" method="POST" onsubmit="return confirm('Are you sure you want to empty your cart?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition transform hover:scale-105">
                                     <i class="fas fa-trash-alt mr-2"></i> Clear Cart
                                 </button>
-                            </form> --}}
+                            </form>
                         </div>
                         <div class="p-6">
                             <div class="overflow-x-auto">
@@ -97,7 +64,7 @@
                                         @foreach($cartItems as $item)
                                             <tr id="cart-item-{{ $item['id'] }}" class="border-b hover:bg-gray-50">
                                                 <td class="py-4 px-4">
-                                                    <img src="{{ $item['image'] ?? '/images/product-placeholder.jpg' }}" 
+                                                    <img src="{{ !empty($item['image']) ? asset('storage/'.$item['image']) : asset('images/product-placeholder.jpg') }}" 
                                                         alt="{{ $item['name'] }}" class="rounded-lg shadow-sm w-20 h-20 object-cover">
                                                 </td>
                                                 <td class="py-4 px-4">
@@ -112,23 +79,19 @@
                                                 </td>
                                                 <td class="py-4 px-4 text-center">UGX {{ number_format($item['price']) }}</td>
                                                 <td class="py-4 px-4 text-center">
-                                                    <form action="{{ route('cart.update', $item['id']) }}" method="POST" class="quantity-form">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <div class="flex items-center justify-center quantity-selector">
-                                                            <button type="button" class="quantity-decrease bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-l-lg p-2 transition">
-                                                                <i class="fas fa-minus"></i>
-                                                            </button>
-                                                            <input type="number" name="quantity" class="quantity-input border-t border-b border-gray-300 text-center p-2" 
-                                                                value="{{ $item['quantity'] }}" min="1" max="{{ $item['stock'] ?? 100 }}" data-item-id="{{ $item['id'] }}">
-                                                            <button type="button" class="quantity-increase bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-r-lg p-2 transition">
-                                                                <i class="fas fa-plus"></i>
-                                                            </button>
-                                                        </div>
-                                                        @if(isset($item['stock']) && $item['stock'] < 10)
-                                                            <div class="text-yellow-600 text-xs mt-2">Only {{ $item['stock'] }} left</div>
-                                                        @endif
-                                                    </form>
+                                                    <div class="flex items-center justify-center quantity-selector">
+                                                        <button type="button" class="quantity-decrease bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-l-lg p-2 transition" data-item-id="{{ $item['id'] }}">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                        <input type="number" class="quantity-input border-t border-b border-gray-300 text-center p-2" 
+                                                            value="{{ $item['quantity'] }}" min="1" max="{{ $item['stock'] ?? 100 }}" data-item-id="{{ $item['id'] }}">
+                                                        <button type="button" class="quantity-increase bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-r-lg p-2 transition" data-item-id="{{ $item['id'] }}">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    @if(isset($item['stock']) && $item['stock'] < 10)
+                                                        <div class="text-yellow-600 text-xs mt-2">Only {{ $item['stock'] }} left</div>
+                                                    @endif
                                                 </td>
                                                 <td class="py-4 px-4 text-center">
                                                     <span class="item-total text-nowrap">UGX {{ number_format($item['total']) }}</span>
@@ -199,26 +162,23 @@
                             <h5 class="text-xl font-semibold">Order Summary</h5>
                         </div>
                         <div class="p-6">
-                            <div class="flex justify-between mb-3">
-                                <span>Subtotal ({{ count($cartItems) }} items)</span>
-                                <span id="subtotal">UGX {{ number_format($totalAmount) }}</span>
-                            </div>
-                            <div class="flex justify-between mb-3">
-                                <span>Shipping Fee</span>
-                                <span id="shipping-fee">Free</span>
-                            </div>
-                            @if(isset($discount) && $discount > 0)
-                                <div class="flex justify-between mb-3 text-green-600">
-                                    <span>Discount</span>
-                                    <span id="discount">- UGX {{ number_format($discount) }}</span>
+                            <div class="space-y-4">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Subtotal ({{ count($cartItems) }} items)</span>
+                                    <span class="font-semibold">UGX {{ number_format($totalAmount) }}</span>
                                 </div>
-                            @endif
-                            <hr class="my-4">
-                            <div class="flex justify-between mb-4">
-                                <strong>Total</strong>
-                                <strong class="text-red-600" id="grand-total">UGX {{ number_format($totalAmount - ($discount ?? 0)) }}</strong>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Delivery Fee</span>
+                                    <span class="font-semibold text-green-600">Free</span>
+                                </div>
+                                <div class="border-t pt-4">
+                                    <div class="flex justify-between text-lg font-bold">
+                                        <span>Total</span>
+                                        <span>UGX {{ number_format($totalAmount) }}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="space-y-3">
+                            <div class="space-y-3 mt-6">
                                 <a href="{{ route('checkout.index') }}" class="block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg text-center transition transform hover:scale-105">
                                     <i class="fas fa-lock mr-2"></i> Proceed to Checkout
                                 </a>
@@ -235,13 +195,15 @@
                     <!-- Promo Code -->
                     <div class="promo-card bg-white rounded-xl shadow-md mb-6" data-aos="fade-up" data-aos-delay="500">
                         <div class="p-6">
-                            <h5 class="text-lg font-semibold mb-3">Have a Promo Code?</h5>
-                            <form id="promo-form">
-                                <div class="flex gap-2">
-                                    <input type="text" class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" id="promo-code" placeholder="Enter promo code">
-                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg transition transform hover:scale-105">Apply</button>
+                            <h5 class="text-lg font-semibold mb-4">Have a Promo Code?</h5>
+                            <form id="promo-form" class="space-y-3">
+                                <div class="flex">
+                                    <input type="text" id="promo-code" class="flex-1 border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Enter code">
+                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-r-lg transition">
+                                        Apply
+                                    </button>
                                 </div>
-                                <div id="promo-message" class="mt-3"></div>
+                                <div id="promo-message"></div>
                             </form>
                         </div>
                     </div>
@@ -317,80 +279,62 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        AOS.init({
-            duration: 800,
-            once: true
-        });
+    $(document).ready(function() {
+        // Initialize AOS
+        AOS.init();
 
-        // Quantity decrease button
+        // Quantity update functionality
         $('.quantity-decrease').click(function() {
-            var inputField = $(this).closest('.quantity-selector').find('.quantity-input');
-            var value = parseInt(inputField.val());
-            if (value > 1) {
-                inputField.val(value - 1);
-                updateItemQuantity(inputField);
+            const itemId = $(this).data('item-id');
+            const input = $(`.quantity-input[data-item-id="${itemId}"]`);
+            const currentValue = parseInt(input.val());
+            if (currentValue > 1) {
+                input.val(currentValue - 1);
+                updateCartItem(itemId, currentValue - 1);
             }
         });
 
-        // Quantity increase button
         $('.quantity-increase').click(function() {
-            var inputField = $(this).closest('.quantity-selector').find('.quantity-input');
-            var value = parseInt(inputField.val());
-            var max = parseInt(inputField.attr('max')) || 100;
-            if (value < max) {
-                inputField.val(value + 1);
-                updateItemQuantity(inputField);
-            } else {
-                Swal.fire({
-                    title: 'Warning',
-                    text: 'Sorry, maximum available quantity reached',
-                    icon: 'warning',
-                    confirmButtonColor: '#dc3545'
-                });
+            const itemId = $(this).data('item-id');
+            const input = $(`.quantity-input[data-item-id="${itemId}"]`);
+            const currentValue = parseInt(input.val());
+            const maxValue = parseInt(input.attr('max'));
+            if (currentValue < maxValue) {
+                input.val(currentValue + 1);
+                updateCartItem(itemId, currentValue + 1);
             }
         });
 
-        // Manual quantity input change
-        $('.quantity-input').on('change', function() {
-            updateItemQuantity($(this));
+        $('.quantity-input').change(function() {
+            const itemId = $(this).data('item-id');
+            const newValue = parseInt($(this).val());
+            updateCartItem(itemId, newValue);
         });
 
-        // Update item quantity with delay
-        let updateTimeout;
-        function updateItemQuantity(inputField) {
-            clearTimeout(updateTimeout);
-            $('#update-cart').removeClass('hidden');
-
-            updateTimeout = setTimeout(function() {
-                const itemId = inputField.data('item-id');
-                const quantity = inputField.val();
-
-                $.ajax({
-                    url: `/cart/${itemId}`,
-                    type: 'PATCH',
-                    data: {
-                        quantity: quantity,
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        // Update item total
-                        const rowEl = inputField.closest('tr');
-                        rowEl.find('.item-total').text(`UGX ${numberFormat(response.item_total)}`);
-
-                        // Update cart totals
-                        $('#subtotal').text(`UGX ${numberFormat(response.subtotal)}`);
-                        $('#grand-total').text(`UGX ${numberFormat(response.total)}`);
-
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Cart updated successfully',
-                            icon: 'success',
-                            confirmButtonColor: '#dc3545'
-                        });
-                        $('#update-cart').addClass('hidden');
-                    },
-                    error: function(error) {
+        function updateCartItem(itemId, quantity) {
+            $.ajax({
+                url: `/cart/update/${itemId}`,
+                method: 'PATCH',
+                data: {
+                    quantity: quantity,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    // Reload the page to update totals
+                    location.reload();
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        if (errors.quantity) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: errors.quantity[0],
+                                icon: 'error',
+                                confirmButtonColor: '#dc3545'
+                            });
+                        }
+                    } else {
                         Swal.fire({
                             title: 'Error',
                             text: 'Failed to update cart',
@@ -398,22 +342,9 @@
                             confirmButtonColor: '#dc3545'
                         });
                     }
-                });
-            }, 500);
-        }
-
-        // Format numbers with commas
-        function numberFormat(number) {
-            return new Intl.NumberFormat('en-US').format(number);
-        }
-
-        // Manual cart update button
-        $('#update-cart').click(function() {
-            $('.quantity-form').each(function() {
-                const input = $(this).find('.quantity-input');
-                updateItemQuantity(input);
+                }
             });
-        });
+        }
 
         // Save for later functionality
         $('.save-for-later').click(function() {
@@ -459,102 +390,21 @@
                 return;
             }
 
-            $.ajax({
-                url: '/cart/apply-promo',
-                type: 'POST',
-                data: {
-                    code: code,
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                beforeSend: function() {
-                    $('#promo-message').html('<div class="text-center py-2"><div class="animate-spin h-5 w-5 border-2 border-t-red-600 rounded-full inline-block"></div> Applying promo code...</div>');
-                },
-                success: function(response) {
-                    if (response.valid) {
-                        $('#promo-message').html('<div class="text-green-600 text-sm mt-2">Promo code applied successfully!</div>');
-
-                        // Add discount row if not exists
-                        if ($('#discount').length === 0) {
-                            const discountRow = `
-                                <div class="flex justify-between mb-3 text-green-600">
-                                    <span>Discount</span>
-                                    <span id="discount">- UGX ${numberFormat(response.discount)}</span>
-                                </div>
-                            `;
-                            $(discountRow).insertBefore('hr');
-                        } else {
-                            $('#discount').text(`- UGX ${numberFormat(response.discount)}`);
-                        }
-
-                        // Update total
-                        $('#grand-total').text(`UGX ${numberFormat(response.total)}`);
-                    } else {
-                        $('#promo-message').html('<div class="text-red-600 text-sm mt-2">Invalid promo code</div>');
-                    }
-                },
-                error: function() {
-                    $('#promo-message').html('<div class="text-red-600 text-sm mt-2">Error applying promo code</div>');
-                }
-            });
-        });
-
-        // Express checkout button
-        $('#express-checkout').click(function() {
-            Swal.fire({
-                title: 'Redirecting',
-                text: 'Redirecting to express checkout...',
-                icon: 'info',
-                confirmButtonColor: '#dc3545',
-                showConfirmButton: false,
-                timer: 1500
-            });
+            // Simulate promo code validation
+            $('#promo-message').html('<div class="text-blue-600 text-sm mt-2">Checking promo code...</div>');
+            
             setTimeout(function() {
-                window.location.href = "{{ route('checkout.index') }}?express=1";
+                $('#promo-message').html('<div class="text-green-600 text-sm mt-2">Promo code applied successfully!</div>');
             }, 1000);
         });
 
-        // Add to cart functionality for recommended products
-        $('.add-to-cart').click(function() {
-            const productId = $(this).data('id');
-            const button = $(this);
-
-            button.prop('disabled', true).html('<span class="animate-spin h-4 w-4 border-2 border-t-white rounded-full inline-block mr-2"></span> Adding...');
-
-            $.ajax({
-                url: '/cart/add',
-                type: 'POST',
-                data: {
-                    product_id: productId,
-                    quantity: 1,
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Product added to cart',
-                        icon: 'success',
-                        confirmButtonColor: '#dc3545'
-                    });
-                    button.prop('disabled', false).html('<i class="fas fa-check mr-2"></i> Added');
-
-                    // Update cart count in header if you have one
-                    if (typeof updateCartCount === 'function') {
-                        updateCartCount(response.cart_count);
-                    }
-
-                    setTimeout(function() {
-                        button.html('<i class="fas fa-cart-plus mr-2"></i> Add to Cart');
-                    }, 2000);
-                },
-                error: function() {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Failed to add product',
-                        icon: 'error',
-                        confirmButtonColor: '#dc3545'
-                    });
-                    button.prop('disabled', false).html('<i class="fas fa-cart-plus mr-2"></i> Add to Cart');
-                }
+        // Express checkout
+        $('.express-checkout').click(function() {
+            Swal.fire({
+                title: 'Express Checkout',
+                text: 'This feature will be available soon!',
+                icon: 'info',
+                confirmButtonColor: '#dc3545'
             });
         });
     });

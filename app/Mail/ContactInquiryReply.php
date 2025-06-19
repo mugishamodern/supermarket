@@ -14,26 +14,20 @@ class ContactInquiryReply extends Mailable
     public $contactInquiry;
     public $reply;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(ContactInquiry $contactInquiry, string $reply)
+    public function __construct(ContactInquiry $contactInquiry, $reply)
     {
         $this->contactInquiry = $contactInquiry;
         $this->reply = $reply;
     }
 
-    /**
-     * Build the message.
-     */
     public function build()
     {
-        return $this->subject('Mukora Supermarket - Response to Your Inquiry')
-            ->markdown('emails.contact-inquiry-reply')
-            ->with([
-                'name' => $this->contactInquiry->name,
-                'originalMessage' => $this->contactInquiry->message,
-                'reply' => $this->reply,
-            ]);
+        return $this->subject('Mukora Supermarket: Response to Your Inquiry')
+                    ->markdown('emails.contact-inquiry-reply')
+                    ->with([
+                        'name' => $this->contactInquiry->name,
+                        'originalMessage' => $this->contactInquiry->message,
+                        'reply' => $this->reply,
+                    ]);
     }
 }

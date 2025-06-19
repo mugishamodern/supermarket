@@ -9,6 +9,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
@@ -95,6 +96,8 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
 Route::patch('/cart/update/{product}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
+Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::get('/cart/count', [CartController::class, 'getCount'])->name('cart.count');
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +115,12 @@ Route::middleware('auth')->group(function () {
     // Keeping the existing user-profile route as requested, but now properly grouped
     Route::get('/user-profile', [HomeController::class, 'profile'])->name('user.profile.home');
     Route::post('/profile/address', [HomeController::class, 'storeAddress'])->name('profile.address.store');
+
+    // Wishlist Routes
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+    Route::delete('/wishlist/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+    Route::post('/wishlist/{id}/move-to-cart', [WishlistController::class, 'moveToCart'])->name('wishlist.move-to-cart');
 
     // Checkout & Orders
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -145,9 +154,12 @@ Route::prefix('admin')
         
         // Admin Reports
         Route::post('reports/export', [ReportController::class, 'export'])->name('reports.export');
+
+        // Admin Promotions CRUD
+        Route::resource('promotions', \App\Http\Controllers\Admin\PromotionController::class)->except(['show']);
     });
 
-// Momo Callback Route
+// Payment API Callback Routes
 Route::post('/api/momo/callback', [CheckoutController::class, 'momoCallback'])->name('momo.callback');
 
 // Authentication Routes (from Laravel's auth.php)

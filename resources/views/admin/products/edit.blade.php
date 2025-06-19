@@ -73,19 +73,29 @@
             </div>
             
             <div>
-                <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                
-                @if($product->image)
-                    <div class="mt-2 mb-2">
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-32 w-auto object-contain">
-                        <p class="text-xs text-gray-500 mt-1">Current image. Upload a new one to replace.</p>
+                <label for="images" class="block text-sm font-medium text-gray-700">Product Images</label>
+                @if($product->images && is_array($product->images) && count($product->images))
+                    <div class="flex flex-wrap gap-2 mt-2 mb-2">
+                        @foreach($product->images as $img)
+                            <div class="relative group">
+                                <img src="{{ asset('storage/' . $img) }}" alt="{{ $product->name }}" class="h-20 w-20 object-cover rounded border">
+                            </div>
+                        @endforeach
                     </div>
+                    <p class="text-xs text-gray-500 mt-1">Current images. Upload new ones to add more.</p>
                 @endif
-                
-                <input type="file" name="image" id="image" class="mt-1 block w-full" accept="image/*">
-                @error('image')
+                <input type="file" name="images[]" id="images" class="mt-1 block w-full" accept="image/*" multiple>
+                <p class="text-xs text-gray-500 mt-1">You can select multiple images. New uploads will be added to the existing ones.</p>
+                @error('images')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
+                @if($errors->has('images.*'))
+                    @foreach($errors->get('images.*') as $messages)
+                        @foreach($messages as $message)
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @endforeach
+                    @endforeach
+                @endif
             </div>
             
             <div class="col-span-1 md:col-span-2">

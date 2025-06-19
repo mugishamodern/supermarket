@@ -6,34 +6,6 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-<style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/Uploads/images/supermarket-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 60vh;
-    }
-    .service-card {
-        transition: all 0.3s ease;
-    }
-    .service-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    .parallax {
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    .form-control:focus {
-        border-color: #dc3545;
-        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-    }
-    .contact-info li {
-        margin-bottom: 15px;
-    }
-</style>
 @endsection
 
 @include('partials.header')
@@ -43,7 +15,7 @@
 <section class="hero-section flex items-center justify-center parallax">
     <div class="container mx-auto text-center px-4">
         <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white animate__animated animate__fadeInDown">Customer Service</h1>
-        <p class="text-lg md:text-xl text-white animate__animated animate__fadeInUp animate__delay-1s">We’re here to assist you with all your shopping needs</p>
+        <p class="text-lg md:text-xl text-white animate__animated animate__fadeInUp animate__delay-1s">We're here to assist you with all your shopping needs</p>
     </div>
 </section>
 
@@ -72,7 +44,7 @@
             <!-- Contact Form -->
             <div class="service-card bg-white rounded-xl shadow-md p-6" data-aos="fade-up" data-aos-delay="200">
                 <h2 class="text-2xl font-bold mb-4 text-gray-800">Send Us a Message</h2>
-                <p class="text-gray-600 mb-6">Fill out the form below, and we’ll get back to you within 24 hours.</p>
+                <p class="text-gray-600 mb-6">Fill out the form below, and we'll get back to you within 24 hours.</p>
                 <form action="{{ route('customer-service.store') }}" method="POST" id="contact-form">
                     @csrf
                     <div class="mb-4">
@@ -137,7 +109,7 @@
                 if (data.success) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Your message has been sent. We’ll get back to you soon!',
+                        text: 'Your message has been sent. We'll get back to you soon!',
                         icon: 'success',
                         confirmButtonColor: '#dc3545'
                     }).then(() => {

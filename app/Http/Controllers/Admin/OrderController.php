@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Address;
+use App\Events\OrderApproved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,41 +18,50 @@ class OrderController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    // Define valid statuses
-    $validStatuses = ['pending', 'processing', 'completed', 'cancelled'];
+    {
+        // Define valid statuses
+        $validStatuses = ['pending', 'processing', 'completed', 'cancelled'];
 
-    // Get the status filter from the request
-    $status = $request->query('status');
+        // Get the status filter from the request
+        $status = $request->query('status');
 
-    // Build the query
-    $query = Order::with(['user', 'address', 'items.product'])->latest();
+        // Build the query
+        $query = Order::with(['user', 'address', 'items.product', 'paymentMethod'])->latest();
 
-    // Apply status filter if provided and valid
-    if ($status && in_array($status, $validStatuses)) {
-        $query->where('status', $status);
+        // Apply status filter if provided and valid
+        if ($status && in_array($status, $validStatuses)) {
+            $query->where('status', $status);
+        }
+
+        // Paginate the results
+        $orders = $query->paginate(10);
+
+        // Preserve query parameters in pagination links
+        $orders->appends(['status' => $status]);
+
+        // Add breadcrumbs
+        $breadcrumbs = [
+            ['title' => 'Orders', 'url' => route('admin.orders.index')]
+        ];
+
+        return view('admin.orders.index', compact('orders', 'status', 'validStatuses', 'breadcrumbs'));
     }
-
-    // Paginate the results
-    $orders = $query->paginate(10);
-
-    // Preserve query parameters in pagination links
-    $orders->appends(['status' => $status]);
-
-    return view('admin.orders.index', compact('orders', 'status', 'validStatuses'));
-}
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        // Get data for dropdowns
-        $users = User::all();
+        $users = User::where('is_admin', false)->get();
         $addresses = Address::all();
         $products = Product::where('status', 'active')->get();
         
-        return view('admin.orders.create', compact('users', 'addresses', 'products'));
+        $breadcrumbs = [
+            ['title' => 'Orders', 'url' => route('admin.orders.index')],
+            ['title' => 'Create Order', 'url' => '#']
+        ];
+        
+        return view('admin.orders.create', compact('users', 'addresses', 'products', 'breadcrumbs'));
     }
 
     /**
@@ -59,22 +69,19 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'address_id' => 'required|exists:addresses,id',
-            'status' => 'required|string|in:pending,processing,completed,cancelled',
-            'payment_method' => 'required|string',
-            'payment_status' => 'required|string|in:paid,unpaid',
-            'notes' => 'nullable|string',
-            'products' => 'required|array',
+            'payment_method_id' => 'required|exists:payment_methods,id',
+            'products' => 'required|array|min:1',
             'products.*' => 'exists:products,id',
-            'quantities' => 'required|array',
+            'quantities' => 'required|array|min:1',
             'quantities.*' => 'integer|min:1',
+            'notes' => 'nullable|string',
         ]);
-        
+
         DB::beginTransaction();
-        
+
         try {
             // Calculate total amount
             $totalAmount = 0;
@@ -83,41 +90,38 @@ class OrderController extends Controller
                 $quantity = $validated['quantities'][$index];
                 $totalAmount += $product->price * $quantity;
             }
-            
-            // Create the order
-            $order = new Order();
-            $order->user_id = $validated['user_id'];
-            $order->address_id = $validated['address_id'];
-            $order->total_amount = $totalAmount;
-            $order->status = $validated['status'];
-            $order->payment_method = $validated['payment_method'];
-            $order->payment_status = $validated['payment_status'];
-            $order->notes = $validated['notes'] ?? null;
-            $order->save();
-            
+
+            // Create order
+            $order = Order::create([
+                'user_id' => $validated['user_id'],
+                'address_id' => $validated['address_id'],
+                'payment_method_id' => $validated['payment_method_id'],
+                'total_amount' => $totalAmount,
+                'status' => 'pending',
+                'payment_status' => 'pending',
+                'notes' => $validated['notes'] ?? null,
+            ]);
+
             // Create order items
             foreach ($validated['products'] as $index => $productId) {
                 $product = Product::find($productId);
                 $quantity = $validated['quantities'][$index];
                 
-                $orderItem = new OrderItem();
-                $orderItem->order_id = $order->id;
-                $orderItem->product_id = $productId;
-                $orderItem->quantity = $quantity;
-                $orderItem->price = $product->price;
-                $orderItem->save();
-                
-                // Optionally update stock
-                // $product->stock -= $quantity;
-                // $product->save();
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $productId,
+                    'quantity' => $quantity,
+                    'price' => $product->price,
+                ]);
             }
-            
+
             DB::commit();
-            
-            return redirect()->route('admin.orders.index')
-                ->with('success', 'Order created successfully.');
+
+            return redirect()->route('admin.orders.show', $order->id)
+                ->with('success', 'Order created successfully!');
+
         } catch (\Exception $e) {
-            DB::rollBack();
+            DB::rollback();
             return back()->with('error', 'Failed to create order: ' . $e->getMessage());
         }
     }
@@ -127,8 +131,14 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        $order = Order::with(['user', 'address', 'items.product'])->findOrFail($id);
-        return view('admin.orders.show', compact('order'));
+        $order = Order::with(['user', 'address', 'items.product', 'paymentMethod'])->findOrFail($id);
+        
+        $breadcrumbs = [
+            ['title' => 'Orders', 'url' => route('admin.orders.index')],
+            ['title' => 'Order #' . $order->id, 'url' => '#']
+        ];
+        
+        return view('admin.orders.show', compact('order', 'breadcrumbs'));
     }
 
     /**
@@ -136,89 +146,91 @@ class OrderController extends Controller
      */
     public function edit(string $id)
     {
-        $order = Order::with(['user', 'address', 'items.product'])->findOrFail($id);
-        $users = User::all();
+        $order = Order::with(['user', 'address', 'items.product', 'paymentMethod'])->findOrFail($id);
+        $users = User::where('is_admin', false)->get();
         $addresses = Address::all();
         $products = Product::where('status', 'active')->get();
         
-        return view('admin.orders.edit', compact('order', 'users', 'addresses', 'products'));
+        $breadcrumbs = [
+            ['title' => 'Orders', 'url' => route('admin.orders.index')],
+            ['title' => 'Order #' . $order->id, 'url' => route('admin.orders.show', $order->id)],
+            ['title' => 'Edit', 'url' => '#']
+        ];
+        
+        return view('admin.orders.edit', compact('order', 'users', 'addresses', 'products', 'breadcrumbs'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-{
-    $order = Order::findOrFail($id);
+    {
+        $order = Order::findOrFail($id);
+        $oldStatus = $order->status;
 
-    // Validate the request with optional fields
-    $validated = $request->validate([
-        'user_id' => 'sometimes|exists:users,id',
-        'address_id' => 'sometimes|exists:addresses,id',
-        'status' => 'sometimes|string|in:pending,processing,completed,cancelled',
-        'payment_method' => 'sometimes|string',
-        'payment_status' => 'sometimes|string|in:paid,unpaid',
-        'notes' => 'nullable|string',
-        'products' => 'sometimes|array',
-        'products.*' => 'exists:products,id',
-        'quantities' => 'sometimes|array',
-        'quantities.*' => 'integer|min:1',
-    ]);
+        // Validate the request with optional fields
+        $validated = $request->validate([
+            'user_id' => 'sometimes|exists:users,id',
+            'address_id' => 'sometimes|exists:addresses,id',
+            'status' => 'sometimes|string|in:pending,processing,completed,cancelled',
+            'payment_method_id' => 'sometimes|exists:payment_methods,id',
+            'payment_status' => 'sometimes|string|in:pending,paid,failed',
+            'notes' => 'nullable|string',
+            'admin_notes' => 'nullable|string',
+            'products' => 'sometimes|array',
+            'products.*' => 'exists:products,id',
+            'quantities' => 'sometimes|array',
+            'quantities.*' => 'integer|min:1',
+        ]);
 
-    DB::beginTransaction();
+        DB::beginTransaction();
 
-    try {
-        // Update only provided fields
-        if (isset($validated['status'])) {
-            $order->status = $validated['status'];
-        }
-        if (isset($validated['notes'])) {
-            $order->admin_notes = $validated['notes'] ?? null; // Use admin_notes or notes based on your schema
-        }
+        try {
+            // Update order
+            $order->update($validated);
 
-        // Handle full order update if products are provided
-        if (isset($validated['products']) && isset($validated['quantities'])) {
-            $totalAmount = 0;
-            foreach ($validated['products'] as $index => $productId) {
-                $product = Product::find($productId);
-                $quantity = $validated['quantities'][$index];
-                $totalAmount += $product->price * $quantity;
+            // Update order items if provided
+            if (isset($validated['products'])) {
+                // Delete existing items
+                $order->items()->delete();
+
+                // Create new items
+                foreach ($validated['products'] as $index => $productId) {
+                    $product = Product::find($productId);
+                    $quantity = $validated['quantities'][$index];
+                    
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $productId,
+                        'quantity' => $quantity,
+                        'price' => $product->price,
+                    ]);
+                }
+
+                // Recalculate total amount
+                $totalAmount = $order->items->sum(function ($item) {
+                    return $item->price * $item->quantity;
+                });
+                $order->update(['total_amount' => $totalAmount]);
             }
 
-            $order->user_id = $validated['user_id'] ?? $order->user_id;
-            $order->address_id = $validated['address_id'] ?? $order->address_id;
-            $order->total_amount = $totalAmount;
-            $order->payment_method = $validated['payment_method'] ?? $order->payment_method;
-            $order->payment_status = $validated['payment_status'] ?? $order->payment_status;
+            DB::commit();
 
-            // Delete existing order items
-            OrderItem::where('order_id', $order->id)->delete();
-
-            // Create new order items
-            foreach ($validated['products'] as $index => $productId) {
-                $product = Product::find($productId);
-                $quantity = $validated['quantities'][$index];
-
-                $orderItem = new OrderItem();
-                $orderItem->order_id = $order->id;
-                $orderItem->product_id = $productId;
-                $orderItem->quantity = $quantity;
-                $orderItem->price = $product->price;
-                $orderItem->save();
+            // Trigger email notification if order status changed to processing or completed
+            if (isset($validated['status']) && $validated['status'] !== $oldStatus) {
+                if (in_array($validated['status'], ['processing', 'completed'])) {
+                    event(new OrderApproved($order));
+                }
             }
+
+            return redirect()->route('admin.orders.show', $order->id)
+                ->with('success', 'Order updated successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Failed to update order: ' . $e->getMessage());
         }
-
-        $order->save();
-
-        DB::commit();
-
-        return redirect()->route('admin.orders.show', $order->id)
-            ->with('success', 'Order updated successfully.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->with('error', 'Failed to update order: ' . $e->getMessage());
     }
-}
 
     /**
      * Remove the specified resource from storage.
@@ -227,13 +239,14 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
         
-        // Order items will be deleted automatically if you have cascading deletes set up
-        // Otherwise, you can delete them manually:
-        OrderItem::where('order_id', $order->id)->delete();
-        
-        $order->delete();
-        
-        return redirect()->route('admin.orders.index')
-            ->with('success', 'Order deleted successfully.');
+        try {
+            $order->items()->delete();
+            $order->delete();
+            
+            return redirect()->route('admin.orders.index')
+                ->with('success', 'Order deleted successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to delete order: ' . $e->getMessage());
+        }
     }
 }

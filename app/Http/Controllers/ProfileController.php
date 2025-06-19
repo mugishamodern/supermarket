@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
 
 class ProfileController extends Controller
 {
@@ -17,13 +17,25 @@ class ProfileController extends Controller
      */
     public function show(Request $request): View
     {
-        $categories = Category::all(); // Get all categories
-        
+        // Get cached categories to avoid redundant queries
+        $categories = Cache::remember('categories', 3600, function () {
+            return \App\Models\Category::select('id', 'name', 'slug')->get();
+        });
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Profile', 'url' => route('user.profile')],
+        ];
         return view('profile.user', [
             'user' => $request->user(),
-            'categories' => $categories, // Pass categories to the view
+            'categories' => $categories,
+            'breadcrumbs' => $breadcrumbs,
         ]);
-    }public function edit(Request $request): View
+    }
+
+    /**
+     * Display the user's profile edit form.
+     */
+    public function edit(Request $request): View
     {
         return view('profile.edit', [
             'user' => $request->user(),
@@ -66,10 +78,17 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    /**
+     * Create user profile view.
+     */
     public function create()
-{   
-    // Fetch categories from your database
-    $categories = \App\Models\Category::all(); // Adjust this based on your model name
-    return view('profile.user', compact('categories'));  
-}
+    {   
+        // Get cached categories to avoid redundant queries
+        $categories = Cache::remember('categories', 3600, function () {
+            return \App\Models\Category::select('id', 'name', 'slug')->get();
+        });
+        
+        return view('profile.user', compact('categories'));  
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -46,7 +47,12 @@ class DashboardController extends Controller
             ->orderBy('stock', 'asc')
             ->take(5)
             ->get();
-            
+        
+        // Get total users (excluding admins)
+        $totalUsers = User::where('is_admin', false)->count();
+        // Get active users (users who have at least one order)
+        $activeUsers = User::where('is_admin', false)->whereHas('orders')->count();
+        
         return view('admin.dashboard', compact(
             'totalProducts',
             'newProductsCount',
@@ -55,7 +61,9 @@ class DashboardController extends Controller
             'monthlyRevenue',
             'revenueChange',
             'recentOrders',
-            'lowStockProducts'
+            'lowStockProducts',
+            'totalUsers',
+            'activeUsers'
         ));
     }
 }

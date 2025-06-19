@@ -7,6 +7,7 @@ use App\Models\ContactInquiry;
 use App\Mail\ContactInquiryReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Events\ContactInquiryReplied;
 
 class ContactInquiryController extends Controller
 {
@@ -45,10 +46,8 @@ class ContactInquiryController extends Controller
         ]);
 
         try {
-            // Send email reply
-            Mail::to($contactInquiry->email)->send(
-                new ContactInquiryReply($contactInquiry, $validated['reply'])
-            );
+            // Send email reply (using event)
+            event(new ContactInquiryReplied($contactInquiry, $validated['reply']));
 
             // Update inquiry status
             $contactInquiry->update([

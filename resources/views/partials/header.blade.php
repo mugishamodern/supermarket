@@ -79,10 +79,11 @@
     <div class="container mx-auto px-4 py-2">
       <nav aria-label="breadcrumb">
         <ol class="flex text-sm text-gray-300">
-          <li><a href="{{ route('home.index') }}" class="hover:text-white">Home</a></li>
           @if(!empty($breadcrumbs))
-            @foreach($breadcrumbs as $bc)
-              <li class="mx-2">/</li>
+            @foreach($breadcrumbs as $i => $bc)
+              @if($i > 0)
+                <li class="mx-2">/</li>
+              @endif
               @if($loop->last)
                 <li class="text-gray-100">{{ $bc['name'] }}</li>
               @else
@@ -107,12 +108,6 @@
   </ul>
 </div>
 </header>
-
-<style>
-  #mobileDropdown ul { list-style: none; padding: 0; margin: 0; }
-  /* Transition for menus */
-  #mobileDropdown, #accountMenu, #helpMenu { transition: max-height 0.3s ease; overflow: hidden; }
-</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {

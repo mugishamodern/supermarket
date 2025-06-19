@@ -6,33 +6,6 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-<style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/uploads/images/supermarket-bg.jpg');
-        background-position: center;
-        height: 60vh;
-    }
-    .value-card {
-        transition: all 0.3s ease;
-    }
-    .value-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    .fade-in {
-        animation: fadeIn 0.8s ease-in forwards;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .parallax {
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-</style>
 @endsection
 
 @include('partials.header')
@@ -52,7 +25,7 @@
         <div class="text-center mb-12" data-aos="fade-up">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Story</h2>
             <div class="w-24 h-1 bg-red-600 mx-auto mb-4"></div>
-            <p class="text-gray-600 max-w-2xl mx-auto">Mukora Supermarket was founded with a vision to bring quality products and exceptional service to the heart of Kasese. Since our establishment in 2015, we’ve grown from a small family-run store to Kasese’s premier shopping destination, supporting local farmers and serving our community with pride.</p>
+            <p class="text-gray-600 max-w-2xl mx-auto">Mukora Supermarket was founded with a vision to bring quality products and exceptional service to the heart of Kasese. Since our establishment in 2015, we've grown from a small family-run store to Kasese's premier shopping destination, supporting local farmers and serving our community with pride.</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="flex justify-center" data-aos="fade-right">

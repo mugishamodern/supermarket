@@ -43,7 +43,7 @@
                             <p class="text-gray-500 text-sm mb-2">{{ Str::limit($product->short_description, 60) }}</p>
                             <div class="flex justify-between items-center">
                                 <span class="font-bold text-red-600">${{ number_format($product->price, 2) }}</span>
-                                <button class="add-to-cart px-3 py-1 bg-gray-200 hover:bg-red-600 hover:text-white rounded transition">
+                                <button class="add-to-cart px-3 py-1 bg-gray-200 hover:bg-red-600 hover:text-white rounded transition" data-product-id="{{ $product->id }}">
                                     <i class="fas fa-shopping-cart mr-1"></i> Add
                                 </button>
                             </div>

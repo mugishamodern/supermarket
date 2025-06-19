@@ -45,7 +45,7 @@
     </a>
     <a href="{{ route('admin.products.index') }}" 
        class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out
-           {{ request()->routeIs('admin.products.index') 
+           {{ request()->routeIs('admin.products.*') 
                ? 'border-indigo-500 text-gray-900 focus:border-indigo-700' 
                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
         Products
@@ -53,7 +53,7 @@
 
     <a href="{{ route('admin.categories.index') }}" 
        class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out
-           {{ request()->routeIs('admin.categories.index') 
+           {{ request()->routeIs('admin.categories.*') 
                ? 'border-indigo-500 text-gray-900 focus:border-indigo-700' 
                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
         Categories
@@ -61,10 +61,18 @@
 
     <a href="{{ route('admin.orders.index') }}" 
        class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out
-           {{ request()->routeIs('admin.orders.index') 
+           {{ request()->routeIs('admin.orders.*') 
                ? 'border-indigo-500 text-gray-900 focus:border-indigo-700' 
                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
         Orders
+    </a>
+
+    <a href="{{ route('admin.contact-inquiries.index') }}" 
+       class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out
+           {{ request()->routeIs('admin.contact-inquiries.*') 
+               ? 'border-indigo-500 text-gray-900 focus:border-indigo-700' 
+               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }}">
+        Contact Inquiries
     </a>
                     </div>
 
@@ -73,17 +81,15 @@
                     <!-- User Menu -->
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <div class="ml-3 relative">
-                            <div class="flex items-center">
-                                <div class="flex items-center">
-                                    <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center mr-2">
-                                        {{ substr(Auth::user()->name, 0, 1) }}
-                                    </div>
-                                    <span class="text-gray-700 mr-3">{{ Auth::user()->name }}</span>
+                            <div class="flex items-center space-x-4">
+                                <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center mr-2">
+                                    {{ substr(Auth::user()->name, 0, 1) }}
                                 </div>
+                                <span class="text-gray-700 mr-3">{{ Auth::user()->name }}</span>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="text-sm text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md transition-colors">
-                                        Log Out
+                                    <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">
+                                        Logout
                                     </button>
                                 </form>
                             </div>
@@ -94,7 +100,7 @@
                     <div class="-mr-2 flex items-center sm:hidden">
                         <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                             <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
                     </div>
@@ -107,7 +113,7 @@
                     <a href="{{ route('admin.dashboard') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                         Dashboard
                     </a>
-                    <a href="{{ route('admin.products.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-indigo-500 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition duration-150 ease-in-out">
+                    <a href="{{ route('admin.products.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                         Products
                     </a>
                     <a href="{{ route('admin.categories.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -115,6 +121,9 @@
                     </a>
                     <a href="{{ route('admin.orders.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
                         Orders
+                    </a>
+                    <a href="{{ route('admin.contact-inquiries.index') }}" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        Contact Inquiries
                     </a>
                 </div>
 
@@ -187,6 +196,41 @@
                                 </div>
                             </div>
                         </div>
+                    @endif
+
+                    <!-- Breadcrumb Navigation -->
+                    @if(isset($breadcrumbs))
+                    <div class="bg-white border-b border-gray-200">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <nav class="flex" aria-label="Breadcrumb">
+                                <ol class="flex items-center space-x-4 py-4">
+                                    <li>
+                                        <div>
+                                            <a href="{{ route('admin.dashboard') }}" class="text-gray-400 hover:text-gray-500">
+                                                <svg class="flex-shrink-0 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    @foreach($breadcrumbs as $breadcrumb)
+                                    <li>
+                                        <div class="flex items-center">
+                                            <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                            @if($loop->last)
+                                                <span class="ml-4 text-sm font-medium text-gray-500">{{ $breadcrumb['title'] }}</span>
+                                            @else
+                                                <a href="{{ $breadcrumb['url'] }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ $breadcrumb['title'] }}</a>
+                                            @endif
+                                        </div>
+                                    </li>
+                                    @endforeach
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
                     @endif
 
                     <!-- Main Content -->

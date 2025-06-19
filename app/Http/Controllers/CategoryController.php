@@ -18,19 +18,27 @@ class CategoryController extends Controller
         // Keep your original ordered list for the main categories display
         $categories = Category::orderBy('name')->get();
         
-        return view('categories.index', compact('categories', 'featuredCategories'));
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Categories', 'url' => route('categories.index')],
+        ];
+        return view('categories.index', compact('categories', 'featuredCategories', 'breadcrumbs'));
     }
 
-public function show(Category $category)
-{
-    $products = $category->products()->paginate(12);
-    $relatedCategories = Category::where('id', '!=', $category->id)
-        ->inRandomOrder()
-        ->limit(4)
-        ->get();
-    
-    return view('categories.show', compact('category', 'products', 'relatedCategories'));
-}
+    public function show(Category $category)
+    {
+        $products = $category->products()->paginate(12);
+        $relatedCategories = Category::where('id', '!=', $category->id)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Categories', 'url' => route('categories.index')],
+            ['name' => $category->name, 'url' => route('categories.show', $category->slug)],
+        ];
+        return view('categories.show', compact('category', 'products', 'relatedCategories', 'breadcrumbs'));
+    }
 
     /**
      * Show the form for creating a new resource.

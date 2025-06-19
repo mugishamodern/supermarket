@@ -7,101 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/uploads/images/supermarket-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 80vh;
-    }
-    
-    .category-card {
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
-    .category-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-    
-    .product-card {
-        transition: all 0.3s ease;
-    }
-    
-    .product-card:hover {
-        transform: translateY(-8px);
-    }
-    
-    .pulse-button {
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
-        70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
-    }
-    
-    .slick-dots li button:before {
-        color: #dc3545;
-    }
-    
-    .testimonial-slide {
-        opacity: 0.5;
-        transform: scale(0.85);
-        transition: all 0.5s ease;
-    }
-
-    /* hide scrollbar */
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-    
-    .slick-center .testimonial-slide {
-        opacity: 1;
-        transform: scale(1);
-    }
-    
-    .counter-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #dc3545;
-    }
-    
-    /* Custom loader animation */
-    .loader {
-        width: 20px;
-        height: 20px;
-        border: 3px solid #ffffff;
-        border-bottom-color: transparent;
-        border-radius: 50%;
-        display: inline-block;
-        box-sizing: border-box;
-        animation: rotation 1s linear infinite;
-    }
-
-    @keyframes rotation {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    /* Fade in animation */
-    .fade-in {
-        animation: fadeIn 0.8s ease-in forwards;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Parallax effect */
-    .parallax {
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-</style>
 @endsection
 
 @include('partials.header')
@@ -124,22 +29,23 @@
 </section>
 
 <!-- Announcement Banner with Countdown Timer -->
-<div class="bg-red-600 text-white py-3 relative overflow-hidden" id="announcement-banner">
+@if($currentPromotion)
+<div class="bg-{{ $currentPromotion->banner_color }}-600 text-white py-3 relative overflow-hidden" id="announcement-banner">
     <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row justify-between items-center">
             <div class="flex items-center mb-3 md:mb-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                 </svg>
-                <p class="font-medium text-sm md:text-base">Special Weekend Sale! Up to 30% off on all electronics</p>
+                <p class="font-medium text-sm md:text-base">{{ $currentPromotion->description }}</p>
             </div>
             <div class="flex items-center">
                 <span class="text-sm mr-2">Ends in:</span>
-                <div class="flex space-x-2" id="countdown-timer">
-                    <div class="bg-white text-red-600 rounded px-2 py-1 text-xs font-bold" id="countdown-days">00</div>
-                    <div class="bg-white text-red-600 rounded px-2 py-1 text-xs font-bold" id="countdown-hours">00</div>
-                    <div class="bg-white text-red-600 rounded px-2 py-1 text-xs font-bold" id="countdown-minutes">00</div>
-                    <div class="bg-white text-red-600 rounded px-2 py-1 text-xs font-bold" id="countdown-seconds">00</div>
+                <div class="flex space-x-2" id="countdown-timer" data-end-date="{{ $currentPromotion->end_date->format('Y-m-d H:i:s') }}">
+                    <div class="bg-white text-{{ $currentPromotion->banner_color }}-600 rounded px-2 py-1 text-xs font-bold" id="countdown-days">00</div>
+                    <div class="bg-white text-{{ $currentPromotion->banner_color }}-600 rounded px-2 py-1 text-xs font-bold" id="countdown-hours">00</div>
+                    <div class="bg-white text-{{ $currentPromotion->banner_color }}-600 rounded px-2 py-1 text-xs font-bold" id="countdown-minutes">00</div>
+                    <div class="bg-white text-{{ $currentPromotion->banner_color }}-600 rounded px-2 py-1 text-xs font-bold" id="countdown-seconds">00</div>
                 </div>
             </div>
         </div>
@@ -150,6 +56,7 @@
         </svg>
     </button>
 </div>
+@endif
 
 <!-- Categories Section with Animation -->
 <section class="py-16 bg-gray-50">
@@ -204,6 +111,10 @@
                         <!-- Product Image -->
                         <img src="{{ $product->image ? asset('storage/'.$product->image) : asset('images/product-placeholder.jpg') }}" 
                             class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        
+                        @if($product->activePromotion())
+                            <span class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">-{{ $product->activePromotion()->discount_percentage }}%</span>
+                        @endif
                         
                         <!-- Featured Badge -->
                         <div class="absolute top-4 left-4">
@@ -268,7 +179,12 @@
                         
                         <!-- Price -->
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-red-600 text-xl">UGX {{ number_format($product->price) }}</span>
+                            @if($product->activePromotion())
+                                <span class="font-bold text-red-600 text-xl">UGX {{ number_format($product->discountedPrice()) }}</span>
+                                <span class="text-sm text-gray-400 line-through ml-2">UGX {{ number_format($product->price) }}</span>
+                            @else
+                                <span class="font-bold text-red-600 text-xl">UGX {{ number_format($product->price) }}</span>
+                            @endif
                             <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-md transition transform hover:scale-105" 
                                 data-product-id="{{ $product->id }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -571,36 +487,53 @@
 <!-- Alpine.js for data & controls (only tailwind classes in CSS) -->
 <script src="//unpkg.com/alpinejs" defer></script></script>
 <script>
-// SET your offer end time here (Year, Month (0-11), Day, Hour, Minute, Second)
-const endDate = new Date("2025-05-01T23:59:59").getTime();
+// Dynamic countdown timer for current promotion
+document.addEventListener('DOMContentLoaded', function() {
+    const countdownTimer = document.getElementById('countdown-timer');
+    if (!countdownTimer) return;
+    
+    const endDateStr = countdownTimer.getAttribute('data-end-date');
+    if (!endDateStr) return;
+    
+    const endDate = new Date(endDateStr).getTime();
+    
+    // Countdown function
+    const countdown = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = endDate - now;
 
-// Countdown
-const countdown = setInterval(function() {
-    const now = new Date().getTime();
-    const distance = endDate - now;
+        if (distance < 0) {
+            clearInterval(countdown);
+            countdownTimer.innerHTML = "<span class='text-sm'>Expired</span>";
+            return;
+        }
 
-    if (distance < 0) {
-        clearInterval(countdown);
-        document.getElementById("countdown-timer").innerHTML = "<span class='text-sm'>Expired</span>";
-        return;
-    }
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    document.getElementById("countdown-days").innerText = String(days).padStart(2, '0');
-    document.getElementById("countdown-hours").innerText = String(hours).padStart(2, '0');
-    document.getElementById("countdown-minutes").innerText = String(minutes).padStart(2, '0');
-    document.getElementById("countdown-seconds").innerText = String(seconds).padStart(2, '0');
-}, 1000);
+        document.getElementById("countdown-days").innerText = String(days).padStart(2, '0');
+        document.getElementById("countdown-hours").innerText = String(hours).padStart(2, '0');
+        document.getElementById("countdown-minutes").innerText = String(minutes).padStart(2, '0');
+        document.getElementById("countdown-seconds").innerText = String(seconds).padStart(2, '0');
+    }, 1000);
+});
 
 // Close banner
-document.getElementById('close-banner').addEventListener('click', function() {
-    document.getElementById('announcement-banner').style.display = 'none';
+document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.getElementById('close-banner');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            const banner = document.getElementById('announcement-banner');
+            if (banner) {
+                banner.style.display = 'none';
+            }
+        });
+    }
 });
-      document.addEventListener('alpine:init', () => {
+
+document.addEventListener('alpine:init', () => {
     Alpine.data('testimonials', () => ({
       testimonials: [
         {
@@ -814,74 +747,6 @@ document.getElementById('close-banner').addEventListener('click', function() {
                 scrollTop: 0
             }, 800);
             return false;
-        });
-        
-        // Add to cart functionality with improved animation
-        $('.add-to-cart').click(function() {
-            const $btn = $(this);
-            const productId = $btn.data('product-id');
-            
-            // Add loading animation
-            $btn.prop('disabled', true).html('<span class="loader"></span>');
-            
-            // AJAX request to add item to cart
-            $.ajax({
-                url: `/cart/add/${productId}`,
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    // Cart button animation
-                    const $cartBtn = $('#quick-shop-toggle');
-                    $cartBtn.addClass('animate__animated animate__rubberBand');
-                    setTimeout(() => {
-                        $cartBtn.removeClass('animate__animated animate__rubberBand');
-                    }, 1000);
-                    
-                    // Show success message
-                    Swal.fire({
-                        title: 'Added to Cart!',
-                        text: 'Product has been added to your cart',
-                        icon: 'success',
-                        confirmButtonColor: '#dc3545',
-                        showClass: {
-                            popup: 'animate__animated animate__fadeInDown'
-                        },
-                        hideClass: {
-                            popup: 'animate__animated animate__fadeOutUp'
-                        }
-                    });
-                    
-                    // Update cart count in navbar and quick cart
-                    $('#cart-count, #quick-cart-count').text(response.cartCount);
-                    
-                    // Reset button
-                    $btn.prop('disabled', false).html(`
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-    </svg>
-    Add to Cart
-`);
-                },
-                error: function(xhr) {
-                    // Error handling
-                    Swal.fire({
-                        title: 'Error!',
-                        text: xhr.responseJSON?.message || 'Could not add product to cart',
-                        icon: 'error',
-                        confirmButtonColor: '#dc3545'
-                    });
-                    
-                    // Reset button
-                    $btn.prop('disabled', false).html(`
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        Add to Cart
-                    `);
-                }
-            });
         });
         
         // Quick Shop functionality

@@ -8,7 +8,9 @@ use App\Models\Category;
 use App\Models\Address;
 use App\Models\User;
 use App\Models\Feedback;
+use App\Models\Promotion;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -18,24 +20,45 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-{
-    // Get all categories
-    $categories = Category::all();
-    
-    // Get 2 random categories for the featured section
-    $featuredCategories = Category::inRandomOrder()->take(2)->get();
-    
-    // Get featured products
-    $featuredProducts = Product::where('is_featured', true)
-        ->orderBy('created_at', 'desc')
-        ->take(8)
-        ->get();
+    {
+        // Cache the data for better performance
+        $cacheKey = 'home_data';
+        $cacheDuration = 300; // 5 minutes
 
-    // Fetch all feedbacks from the database
-    $feedbacks = Feedback::all();
-    
-    return view('home', compact('categories', 'featuredCategories', 'featuredProducts', 'feedbacks'));
-}
+        $data = Cache::remember($cacheKey, $cacheDuration, function () {
+            // Get categories with eager loading for products
+            $categories = Category::withCount('products')->get();
+            
+            // Get 2 random categories for the featured section
+            $featuredCategories = Category::inRandomOrder()
+                ->withCount('products')
+                ->take(2)
+                ->get();
+            
+            // Get featured products with category relationship
+            $featuredProducts = Product::where('is_featured', true)
+                ->where('status', 'active')
+                ->with('category')
+                ->orderBy('created_at', 'desc')
+                ->take(8)
+                ->get();
+
+            // Get recent feedbacks (limit to 6 for performance)
+            $feedbacks = Feedback::orderBy('created_at', 'desc')
+                ->take(6)
+                ->get();
+            
+            // Get current active promotion for announcement banner
+            $currentPromotion = Promotion::current()->first();
+            
+            return compact('categories', 'featuredCategories', 'featuredProducts', 'feedbacks', 'currentPromotion');
+        });
+        
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => route('home')],
+        ];
+        return view('home', array_merge($data, compact('breadcrumbs')));
+    }
     
     /**
      * Show the user profile page.
@@ -45,9 +68,13 @@ class HomeController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        $addresses = $user->addresses;
         
-        return view('profile.user', compact('user', 'addresses'));
+        // Eager load addresses to avoid N+1 queries
+        $user->load(['addresses' => function($query) {
+            $query->orderBy('is_default', 'desc')->orderBy('created_at', 'desc');
+        }]);
+        
+        return view('profile.user', compact('user'));
     }
     
     /**
@@ -85,6 +112,9 @@ class HomeController extends Controller
                 ->where('id', '!=', $address->id)
                 ->update(['is_default' => false]);
         }
+        
+        // Clear cache to reflect changes
+        Cache::forget('home_data');
         
         return redirect()->route('profile')->with('success', 'Address added successfully!');
     }
