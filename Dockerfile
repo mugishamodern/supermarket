@@ -36,5 +36,5 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 # Expose port 8080 and start php-fpm server
 EXPOSE 8080
 
-# Start Laravel's built-in server
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080 
+# Start Laravel's built-in server, ensuring SQLite file exists
+CMD ["/bin/sh", "-c", "mkdir -p /data && touch /data/database.sqlite && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080"] 
